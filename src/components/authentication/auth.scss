@@ -1,0 +1,69 @@
+@import '../../styles/variables.scss';
+
+.auth {
+	position: absolute;
+	display: flex;
+	margin: auto;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	width: 73%;
+	height: 780px;
+	border-radius: 16px;
+	background-color: $auth-body-color;
+
+	&:hover {
+		background-color: $auth-body-color--hover;
+		transition: all .2s;
+
+	}
+
+	&__form {
+		position: relative;
+		top: 25%;
+		left: 26%;
+		width: 47.5%;
+		height: 52.3%;
+		border-radius: 16px;
+		background-color: $auth-form-color;
+		box-shadow: 1px 1px 10px $background-color;
+		&:hover {
+			background-color: $auth-form-color--hover;
+			box-shadow: 1px 1px 24px $background-color;
+			transition: all .2s;
+		}
+	}
+
+	&__auth {
+		width: 100px;
+		height: 100px;
+		background-color: rgb(44, 25, 25);
+	}
+
+	&__form-container {
+		display: flex;
+		position: relative;
+
+		top: 100px;
+		gap: 78px;
+		left: 120px;
+		font-weight: 400;
+	
+
+	}
+
+	&__form-module {
+		height: 100px;
+		width: 26%;
+		background-color: rgb(44, 25, 25);
+		color: width;
+		text-align: center;
+		padding-top: 5px;
+		span {
+		
+			color: white;
+		}
+		
+	}
+}
