@@ -1,5 +1,5 @@
 import { ButtonProps } from './Button.props';
-import './Button.props';
+import '../auth.scss';
 
 
 export const Button =
@@ -7,6 +7,6 @@ export const Button =
 		{ ...props }: ButtonProps,
 	): JSX.Element => {
 		return (
-			<button className='button' {...props}></button>
+			<button className='auth__button' {...props}></button>
 		);
 	};

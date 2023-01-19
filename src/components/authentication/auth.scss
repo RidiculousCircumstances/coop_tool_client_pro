@@ -3,13 +3,15 @@
 .auth {
 	position: absolute;
 	display: flex;
+	align-items: center;
+	justify-content: center;
 	margin: auto;
 	top: 0;
 	left: 0;
 	bottom: 0;
 	right: 0;
-	width: 73%;
-	height: 780px;
+	width: 1200px;
+	height: 680px;
 	border-radius: 16px;
 	background-color: $auth-body-color;
 
@@ -20,14 +22,14 @@
 	}
 
 	&__form {
-		position: relative;
-		top: 25%;
-		left: 26%;
-		width: 47.5%;
-		height: 52.3%;
+		position: absolute;
+		width: 60%;
+		height: 65%;
 		border-radius: 16px;
 		background-color: $auth-form-color;
+		justify-content: center;
 		box-shadow: 1px 1px 10px $background-color;
+		display:flex;
 		&:hover {
 			background-color: $auth-form-color--hover;
 			box-shadow: 1px 1px 24px $background-color;
@@ -35,35 +37,86 @@
 		}
 	}
 
-	&__auth {
-		width: 100px;
-		height: 100px;
-		background-color: rgb(44, 25, 25);
+	&__form-container {
+		position: relative;
+		width: 600px;
+		height: 250px;
+		top: 28%;
+		box-sizing: border-box;
+		gap: 80px;
 	}
 
-	&__form-container {
+	&__title_wrapper {
 		display: flex;
-		position: relative;
-
-		top: 100px;
-		gap: 78px;
-		left: 120px;
-		font-weight: 400;
-	
-
+		justify-content: center;
+		gap: 30px;
+		font-size:x-large;
+		font-weight: 700;
+		color: rgb(0, 0, 0);
+		margin-bottom: 10px;
+		div:hover {
+			color: rgba(24, 119, 119, 0.904);
+		}
 	}
 
 	&__form-module {
-		height: 100px;
-		width: 26%;
-		background-color: rgb(44, 25, 25);
-		color: width;
-		text-align: center;
+		position: relative;
+		box-sizing: border-box;
+		width: 100%;
 		padding-top: 5px;
+		height: 235px;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+
 		span {
-		
 			color: white;
 		}
-		
 	}
+
+	&__input_wrapper {
+		box-sizing: border-box;
+		text-align: center;
+	}
+
+
+	&__input {
+		input {
+			width: 500px;
+			padding: 6px 10px;
+			margin: 8px 0;
+			box-sizing: border-box;
+			text-align: center;
+			font-family: inherit;
+			font-size: inherit;
+			line-height: inherit;
+			border-radius: 4px;
+		}
+		
+		&--error {
+			border: 2px solid red;
+	}
+}
+
+	&__button {
+		box-sizing: border-box;
+		position:absolute;
+		height: 50px;
+		width: 200px;
+		margin-top: 180px;
+		border: none;
+
+		background: $button-color;
+		font-size: large;
+	
+
+		&:hover {
+			background-color: $auth-form-color--hover;
+			background: $button-color;
+			box-shadow: 1px 1px 24px $green-color;
+			transition: all .2s;
+		}
+	}
+
+	
 }

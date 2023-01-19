@@ -1,32 +1,36 @@
 import { makeAutoObservable } from 'mobx';
+import api from '../../api/http';
 import { AuthFormData } from '../../components/authentication/AuthFormInterface';
 import { RegistrationFormData } from '../../components/authentication/RegistrationFormInterface';
+import { ClientResponse } from '../../models/ClientResponse';
 
 export class UserStorage {
-	user: boolean = false;
+	isAuth: boolean = false;
+	userData: ClientResponse | null = null;
 	constructor () {
 		makeAutoObservable(this);
 	}
 
-	setUser (set: boolean) {
-		this.user = set;
+	setAuth (bool: boolean) {
+		this.isAuth = bool;
 	}
 
-	isAuth () {
-		if (this.user) {
-			return true;
-		} else {
-			return false;
+	setUserData (data: ClientResponse) {
+		this.userData = data;
+	}
+
+	async login (email: string, password: string) {
+		const res = await api.post<ClientResponse>('user/authorize', { email, password });
+	}
+
+	async registration (data: RegistrationFormData) {
+		const res = await api.post<ClientResponse>('user/register', { ...data });
+		if (!res.data.token) {
+			return new Error('Неизвестная ошибка сервера');
 		}
-
-	}
-
-	login (data: AuthFormData) {
-		console.log('logged in');
-	}
-
-	registration (data: RegistrationFormData) {
-
+		localStorage.setItem('token', res.data.token);
+		this.setUserData(res.data);
+		this.setAuth(true);
 	}
 
 }

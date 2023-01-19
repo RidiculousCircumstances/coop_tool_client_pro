@@ -1,6 +1,6 @@
 import { InputProps } from './Input.props';
-import styles from './Input.module.css';
-import cn from 'classnames';
+import '../auth.scss';
+
 import { ForwardedRef, forwardRef } from 'react';
 
 export const Input = forwardRef(
@@ -10,7 +10,7 @@ export const Input = forwardRef(
 	): JSX.Element => {
 
 		return (
-			<div className='input' >
+			<div className='auth__input' >
 				<input ref={ref}  {...props} />
 				{error && <span className='input__error'></span>}
 			</div>
