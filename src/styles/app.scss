@@ -1,15 +1,23 @@
 @import "./variables.scss";
+@import "./mixins.scss";
 
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
 	font-family: "Noto Sans", sans-serif;
+
+
+}
+
+.image {
+	background-image: url('./cat.webp');
 }
 
 .app {
 	height: 100vh;
 	max-height: 100vh;
 	width: 100%;
-	background-color: $background-color;
+	@include withGradient(#412929a2, #251b1ba9, #dd35357a, #1339b473, #ffffff5e);
 }
+

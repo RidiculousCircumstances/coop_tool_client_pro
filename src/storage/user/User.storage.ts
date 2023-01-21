@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios';
 import { makeAutoObservable } from 'mobx';
 import api from '../../api/http';
 import { AuthFormData } from '../../components/authentication/AuthFormInterface';
@@ -11,6 +12,15 @@ export class UserStorage {
 		makeAutoObservable(this);
 	}
 
+	private handleResponse (res: AxiosResponse) {
+		if (!res.data.token) {
+			return new Error('Неизвестная ошибка сервера');
+		}
+		localStorage.setItem('token', res.data.token);
+		this.setUserData(res.data);
+		this.setAuth(true);
+	}
+
 	setAuth (bool: boolean) {
 		this.isAuth = bool;
 	}
@@ -20,17 +30,24 @@ export class UserStorage {
 	}
 
 	async login (email: string, password: string) {
-		const res = await api.post<ClientResponse>('user/authorize', { email, password });
+
+		try {
+			const res = await api.post<ClientResponse>('user/authorize', { email, password });
+			this.handleResponse(res);
+		} catch (e: any) {
+			return (e.response.status);
+		}
 	}
 
 	async registration (data: RegistrationFormData) {
-		const res = await api.post<ClientResponse>('user/register', { ...data });
-		if (!res.data.token) {
-			return new Error('Неизвестная ошибка сервера');
+
+		try {
+			const res = await api.post<ClientResponse>('user/register', { ...data });
+			this.handleResponse(res);
+		} catch (e: any) {
+			return (e.response.status);
 		}
-		localStorage.setItem('token', res.data.token);
-		this.setUserData(res.data);
-		this.setAuth(true);
+	
 	}
 
 }

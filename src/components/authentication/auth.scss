@@ -1,4 +1,5 @@
 @import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
 
 .auth {
 	position: absolute;
@@ -13,12 +14,11 @@
 	width: 1200px;
 	height: 680px;
 	border-radius: 16px;
-	background-color: $auth-body-color;
+	@include withGradient(#41292904, #88424205, #9f27c405, #1339b409, #ffffff09);
 
 	&:hover {
-		background-color: $auth-body-color--hover;
+		@include withGradient(#41292904, #88424205, #9f27c411, #1339b409, #ffffff09);
 		transition: all .2s;
-
 	}
 
 	&__form {
@@ -26,13 +26,12 @@
 		width: 60%;
 		height: 65%;
 		border-radius: 16px;
-		background-color: $auth-form-color;
+		@include withGradient(#41292904, #3a1e1eb9, #9f27c411, #1339b409, #ffffff09);
 		justify-content: center;
 		box-shadow: 1px 1px 10px $background-color;
 		display:flex;
 		&:hover {
-			background-color: $auth-form-color--hover;
-			box-shadow: 1px 1px 24px $background-color;
+			box-shadow: 1px 1px 60px $background-color;
 			transition: all .2s;
 		}
 	}
@@ -41,21 +40,29 @@
 		position: relative;
 		width: 600px;
 		height: 250px;
-		top: 28%;
+		top: 15%;
 		box-sizing: border-box;
 		gap: 80px;
+		
 	}
 
-	&__title_wrapper {
+	&__title {
 		display: flex;
 		justify-content: center;
 		gap: 30px;
-		font-size:x-large;
-		font-weight: 700;
+		font-size:xx-large;
+		font-weight: bold;
 		color: rgb(0, 0, 0);
 		margin-bottom: 10px;
+		cursor: pointer	;
+			
 		div:hover {
 			color: rgba(24, 119, 119, 0.904);
+		}
+
+		&--active {
+			color:rgb(51, 6, 43);
+			
 		}
 	}
 
@@ -84,17 +91,23 @@
 		input {
 			width: 500px;
 			padding: 6px 10px;
-			margin: 8px 0;
+			margin: 8px 0 25px;
 			box-sizing: border-box;
 			text-align: center;
 			font-family: inherit;
 			font-size: inherit;
 			line-height: inherit;
 			border-radius: 4px;
+			color: $gray-color;
+			@include withGradient(#41292941, #251919b9, #9f27c411, #1339b409, #ffffff09);
 		}
 		
 		&--error {
-			border: 2px solid red;
+	
+			input {
+			box-shadow: 1px 1px 24px hsl(273, 100%, 51%);
+			}
+
 	}
 }
 
@@ -103,19 +116,24 @@
 		position:absolute;
 		height: 50px;
 		width: 200px;
-		margin-top: 180px;
+		margin-top: 240px;
 		border: none;
-
-		background: $button-color;
+		border-radius: 20px;
 		font-size: large;
+		font-weight: 600;
 	
-
+		@include withGradient(#613b3b52, #4d3e3eb9, #9f27c411, #1339b409, #ffffff09);
 		&:hover {
-			background-color: $auth-form-color--hover;
-			background: $button-color;
 			box-shadow: 1px 1px 24px $green-color;
 			transition: all .2s;
 		}
+	}
+
+
+	&__error {
+		position: relative;
+		bottom: 10px;
+		color: $gray-color;
 	}
 
 	

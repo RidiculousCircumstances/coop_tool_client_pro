@@ -1,0 +1,5 @@
+@mixin withGradient ($lc1, $lc2, $rc1, $rc2, $c) {
+	background: linear-gradient(to bottom, $lc1 0%, $lc2 100%),
+	radial-gradient(at top center, $rc1 0%, $rc2 120%) $c;
+	background-blend-mode: multiply, multiply;
+}
