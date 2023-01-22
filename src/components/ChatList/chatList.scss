@@ -1,0 +1,64 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+
+.chatList {
+	width: 275px;
+	position: absolute;
+	top: 20px;
+	left: 50%;
+	display: block;
+
+	&__room-button {
+		height: 40px;
+		width: 275px;
+		border-radius: 16px 16px 0 0;
+		color: $gray-color;
+		@include withGradient(#150F0F, #463939, #9f27c411, #1339b409, #ffffff09);
+	}
+
+	&__action-button {
+		height: 40px;
+		width: 275px;
+		color: $gray-color;
+		@include withGradient(#150F0F, #4d3e3e1f, #9f27c411, #1339b409, #ffffff09);
+		&:hover {
+			@include withGradient(#150F0F, #201d1d9f, #9f27c411, #1339b409, #ffffff09);
+		}
+	}
+
+	&__main {
+		box-sizing: border-box;
+		height: 850px;
+		border-radius: 0 0 16px 16px;
+		@include withGradient(#2e2424a8, #4d3e3e9d, #9f27c411, #1339b409, #ffffff09);;
+	}
+
+	&__header {
+		height: 40px;
+		display: flex;
+		@include withGradient(#2e242413, #4d3e3e44, #9f27c411, #1339b409, #ffffff09);
+	}
+
+	&__listItem {
+		list-style-type: none;
+	}
+
+	&__listContainer {
+		margin-top: 30px;
+		margin-left: 0;
+		padding-left: 0;
+	}
+
+	&__chat {
+		color: $gray-color;
+		height: 60px;
+		line-height: 2;
+		margin: 1px 4px 0 4px;
+		padding-left: 10px;
+		&:hover {
+			@include withGradient(#201b1be7, #201313a2, #9f27c411, #1339b409, #ffffff09);
+		}
+
+	}
+}

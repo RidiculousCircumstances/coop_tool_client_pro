@@ -112,15 +112,11 @@
 }
 
 	&__button {
-		box-sizing: border-box;
 		position:absolute;
 		height: 50px;
 		width: 200px;
 		margin-top: 240px;
-		border: none;
 		border-radius: 20px;
-		font-size: large;
-		font-weight: 600;
 	
 		@include withGradient(#613b3b52, #4d3e3eb9, #9f27c411, #1339b409, #ffffff09);
 		&:hover {

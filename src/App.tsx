@@ -2,6 +2,7 @@ import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 import { Context } from '.';
 import { Authentication } from './components/authentication/Authentication';
+import { ChatList } from './components/ChatList/ChatList';
 import './styles/app.scss';
 
 export const App = observer(() => {
@@ -10,7 +11,7 @@ export const App = observer(() => {
     <div className="image">
       <div className="app">
         {context.userStorage.isAuth ?
-          <div></div> :
+          <ChatList /> :
           <Authentication />}
       </div>
     </div>

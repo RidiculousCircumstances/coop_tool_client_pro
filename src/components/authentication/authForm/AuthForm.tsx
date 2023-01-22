@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { CONST } from '../../../Const';
-import { Button } from '../button/Button';
+import { Button } from '../../Button/Button';
 import { Input } from '../input/Input'
 import { RegistrationFormData } from '../RegistrationFormInterface';
 import { AuthFormProps } from './AuthForm.props'
@@ -56,7 +56,7 @@ export const AuthForm = ({ type, handler, error, isSuccess, ...props  }: AuthFor
 					{(error === 401) && <div className='auth__error'>{CONST.AUTH_ERROR}</div>}
 				</div>
 			</div>
-			<Button>OK</Button> 
+			<Button className='auth__button'>OK</Button> 
 		</form>
 
 	)

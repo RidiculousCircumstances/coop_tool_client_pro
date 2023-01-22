@@ -7,5 +7,5 @@ import {
 
 export interface ButtonProps extends DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, 
 	HTMLButtonElement> {
-		children: ReactNode;
+		children?: ReactNode;
 	}
