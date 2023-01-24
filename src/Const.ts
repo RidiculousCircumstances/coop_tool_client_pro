@@ -6,4 +6,12 @@ export const CONST = {
 	EMPTY_FIELD_ERROR: '*Заполните обязательные поля',
 	ALREADY_EXISTS_ERROR: '*Пользователь с таким email уже существует',
 	AUTH_ERROR: '*Введен неправильный логин или пароль',
+
+	MODAL_NEW: 'Введите название комнаты',
+	MODAL_NEW_BUTTON: 'Создать',
+
+	MODAL_JOIN: 'Введите id комнаты',
+	MODAL_JOIN_BUTTON: 'Присоединиться'
+
+
 }

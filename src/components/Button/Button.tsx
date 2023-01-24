@@ -5,9 +5,13 @@ import cn from 'classnames';
 
 export const Button =
 	(
-		{ className, ...props }: ButtonProps,
+		{ className, appearence,  ...props }: ButtonProps,
 	): JSX.Element => {
 		return (
-			<button className={cn(className, 'button')} {...props}></button>
+			<button className={cn(className, 'button', 
+				{ 'button--large': appearence  === 'large'},
+				{ 'button--small': appearence === 'small' },
+				{ 'button--long': appearence === 'long' }
+				)} {...props}></button>
 		);
 	};

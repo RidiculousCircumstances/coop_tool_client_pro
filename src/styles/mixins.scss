@@ -3,3 +3,10 @@
 	radial-gradient(at top center, $rc1 0%, $rc2 120%) $c;
 	background-blend-mode: multiply, multiply;
 }
+
+@mixin getFont ($size, $weight, $color, $height) {
+	font-size: $size;
+	font-weight: $weight;
+	color: $color;
+	line-height: height;
+}

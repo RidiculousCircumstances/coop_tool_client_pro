@@ -1,0 +1,71 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+.modals {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100vw;
+	height: 100vh;
+	position: fixed;
+	top: 0;
+	left: 0;
+	opacity: 0;
+	pointer-events: none;
+	transition: 0.5s;
+
+	@include withGradient(hsla(0, 17%, 7%, 0.3), 
+				hsla(0, 10%, 25%, 0.3), hsla(286, 67%, 46%, 0.3), hsla(226, 81%, 39%, 0.3), hsla(0, 0%, 100%, 0.3));
+
+
+	&--active {
+		opacity: 1;
+		transition: 0.5s;
+		pointer-events: all;
+	}
+
+	&__form {
+		position: relative;
+		@include withGradient(hsla(0, 17%, 7%, 0.8),
+				hsla(0, 10%, 25%, 0.8), hsla(286, 67%, 46%, 0.8), hsla(226, 81%, 39%, 0.8), hsla(0, 0%, 100%, 0.8));
+	
+		width: 500px;
+		height: 280px;
+		border-radius: 16px;
+		transform: scale(0);
+
+		&--active {
+			transform: scale(1);
+			transition: 0.1s;
+		}
+	}
+
+
+
+	&__text {
+
+		position: inherit;
+		display: flex;
+		justify-content: center;
+		top: 40px;
+
+		@include getFont($size: 24px, $weight: 400, $color: $gray-color, $height: 5px);
+	}
+
+	&__input {
+		position: inherit;
+		top: 60px;
+		display: flex;
+		justify-content: center;
+		input {
+			width: 450px !important;
+		}		
+	}
+
+	&__button {
+		position: inherit;
+		top: 70px;
+		margin-left: 150px;
+
+	}
+}

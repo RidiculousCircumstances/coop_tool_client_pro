@@ -88,41 +88,14 @@
 
 
 	&__input {
-		input {
-			width: 500px;
-			padding: 6px 10px;
-			margin: 8px 0 25px;
-			box-sizing: border-box;
-			text-align: center;
-			font-family: inherit;
-			font-size: inherit;
-			line-height: inherit;
-			border-radius: 4px;
-			color: $gray-color;
-			@include withGradient(#41292941, #251919b9, #9f27c411, #1339b409, #ffffff09);
-		}
-		
-		&--error {
-	
-			input {
-			box-shadow: 1px 1px 24px hsl(273, 100%, 51%);
-			}
-
+		font-family: inherit;
+		font-size: inherit;
+		line-height: inherit;
 	}
-}
 
 	&__button {
 		position:absolute;
-		height: 50px;
-		width: 200px;
 		margin-top: 240px;
-		border-radius: 20px;
-	
-		@include withGradient(#613b3b52, #4d3e3eb9, #9f27c411, #1339b409, #ffffff09);
-		&:hover {
-			box-shadow: 1px 1px 24px $green-color;
-			transition: all .2s;
-		}
 	}
 
 

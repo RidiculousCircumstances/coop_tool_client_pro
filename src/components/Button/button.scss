@@ -1,6 +1,45 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
 .button {
 	box-sizing: border-box;
 	border: none;
 	font-size: large;
 	font-weight: 600;
+
+	&--large {
+		height: 50px;
+		width: 200px;
+		border-radius: 20px;
+	
+		@include withGradient(#613b3b52, #4d3e3eb9, #9f27c411, #1339b409, #ffffff09);
+	
+		&:hover {
+			box-shadow: 1px 1px 24px $green-color;
+			transition: all .2s;
+		}
+	}
+
+	&--small {
+		height: 40px;
+		width: 275px;
+		color: $gray-color;
+
+		&:hover {
+			@include withGradient(#150F0F, #201d1d9f, #9f27c411, #1339b409, #ffffff09);
+		}
+	}
+
+	&--long {
+		height: 40px;
+		width: 275px;
+		border-radius: 16px;
+		color: $gray-color;
+		@include withGradient(#150F0F, #463939, #9f27c411, #1339b409, #ffffff09);
+
+		&:hover {
+			@include withGradient(#150F0F, #201d1d9f, #9f27c411, #1339b409, #ffffff09);
+		}
+
+	}
 }

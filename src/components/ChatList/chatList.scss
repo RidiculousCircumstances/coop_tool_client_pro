@@ -10,20 +10,21 @@
 	display: block;
 
 	&__room-button {
-		height: 40px;
-		width: 275px;
 		border-radius: 16px 16px 0 0;
-		color: $gray-color;
-		@include withGradient(#150F0F, #463939, #9f27c411, #1339b409, #ffffff09);
+		@include withGradient(hsla(0, 17%, 7%, 0.8),
+				hsla(0, 10%, 25%, 0.8), rgba(105, 30, 128, 0.8), rgba(19, 56, 180, 0.8), rgba(255, 255, 255, 0.8));
+	
+		&:hover {
+			@include withGradient(hsla(22, 76%, 30%, 0.8),
+					hsla(0, 13%, 34%, 0.8), rgba(105, 30, 128, 0.8), rgba(19, 56, 180, 0.8), rgba(255, 255, 255, 0.8));
+		}
 	}
 
 	&__action-button {
-		height: 40px;
-		width: 275px;
-		color: $gray-color;
-		@include withGradient(#150F0F, #4d3e3e1f, #9f27c411, #1339b409, #ffffff09);
+
+		@include withGradient(rgba(168, 159, 28, 0.3), rgba(77, 61, 61, 0.3), rgba(159, 39, 196, 0.3), rgba(19, 57, 180, 0.3), rgba(255, 255, 255, 0.1));
 		&:hover {
-			@include withGradient(#150F0F, #201d1d9f, #9f27c411, #1339b409, #ffffff09);
+			@include withGradient(rgba(168, 159, 28, 0.6), rgba(77, 61, 61, 0.3), rgba(159, 39, 196, 0.3), rgba(19, 57, 180, 0.3), rgba(255, 255, 255, 0.1));
 		}
 	}
 
@@ -31,13 +32,14 @@
 		box-sizing: border-box;
 		height: 850px;
 		border-radius: 0 0 16px 16px;
-		@include withGradient(#2e2424a8, #4d3e3e9d, #9f27c411, #1339b409, #ffffff09);;
+		@include withGradient(hsla(0, 17%, 7%, 0.8),
+				hsla(0, 10%, 25%, 0.8), hsla(286, 67%, 46%, 0.8), hsla(226, 81%, 39%, 0.8), hsla(0, 0%, 100%, 0.8));
 	}
 
 	&__header {
 		height: 40px;
 		display: flex;
-		@include withGradient(#2e242413, #4d3e3e44, #9f27c411, #1339b409, #ffffff09);
+		@include withGradient(#c56e6e13, #4d3e3e44, #9f27c411, #1339b409, #ffffff09);
 	}
 
 	&__listItem {
@@ -57,7 +59,7 @@
 		margin: 1px 4px 0 4px;
 		padding-left: 10px;
 		&:hover {
-			@include withGradient(#201b1be7, #201313a2, #9f27c411, #1339b409, #ffffff09);
+			@include withGradient(rgba(168, 159, 28, 0.6), rgba(77, 61, 61, 0.3), rgba(159, 39, 196, 0.3), rgba(19, 57, 180, 0.3), rgba(255, 255, 255, 0.1));
 		}
 
 	}
