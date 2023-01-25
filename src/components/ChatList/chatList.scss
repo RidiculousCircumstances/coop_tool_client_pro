@@ -8,9 +8,11 @@
 	top: 20px;
 	left: 50%;
 	display: block;
+	height: 890px;
 
 	&__room-button {
-		border-radius: 16px 16px 0 0;
+		border-radius: 16px;
+		transition-delay: 0.6s;
 		@include withGradient(hsla(0, 17%, 7%, 0.8),
 				hsla(0, 10%, 25%, 0.8), rgba(105, 30, 128, 0.8), rgba(19, 56, 180, 0.8), rgba(255, 255, 255, 0.8));
 	
@@ -18,7 +20,14 @@
 			@include withGradient(hsla(22, 76%, 30%, 0.8),
 					hsla(0, 13%, 34%, 0.8), rgba(105, 30, 128, 0.8), rgba(19, 56, 180, 0.8), rgba(255, 255, 255, 0.8));
 		}
+
+		&--active {
+			border-radius: 16px 16px 0 0;
+			transition-delay: 0s;
+		}
 	}
+
+	
 
 	&__action-button {
 
@@ -32,8 +41,7 @@
 		box-sizing: border-box;
 		height: 850px;
 		border-radius: 0 0 16px 16px;
-		@include withGradient(hsla(0, 17%, 7%, 0.8),
-				hsla(0, 10%, 25%, 0.8), hsla(286, 67%, 46%, 0.8), hsla(226, 81%, 39%, 0.8), hsla(0, 0%, 100%, 0.8));
+		
 	}
 
 	&__header {
@@ -50,6 +58,7 @@
 		margin-top: 30px;
 		margin-left: 0;
 		padding-left: 0;
+
 	}
 
 	&__chat {
@@ -64,19 +73,19 @@
 
 	}
 
-	&__droptop-input {
+	&__droptop-chats-input {
 		display: flex;
 		justify-content: center;
 		box-sizing: border-box;
 
 		input {
-			width: 250px;
+			width: 240px;
 			height: 30px;
 			text-align: left;
 		}
 	}
 
-	&__droptop-text {
+	&__droptop-chats-text {
 		box-sizing: border-box;
 		position: relative;
 		display: flex;
@@ -87,7 +96,7 @@
 		@include getFont($size: large, $weight: 400, $color: $gray-color, $height: 5px);
 	}
 
-	&__droptop-button {
+	&__droptop-chats-button {
 		box-sizing: border-box;
 		position: relative;
 		width: fit-content;
@@ -97,8 +106,24 @@
 		bottom: 10px;
 	}
 
-	&__droptop-button-container {
+	&__droptop-chats-button-container {
 		display: flex;
 		justify-content: flex-end;
 	}
+
+	&__droptop {
+		@include withGradient(hsla(0, 17%, 7%, 0.8),
+				hsla(0, 10%, 25%, 0.8), rgba(105, 30, 128, 0.8), rgba(19, 56, 180, 0.8), rgba(255, 255, 255, 0.8));
+	}
+
+	&__chats-action-menu {
+		display: contents;
+		height: 120px;
+	}
+
+	&__droptop-chats-action-menu {
+		@include withGradient(hsla(0, 17%, 7%, 0.9),
+				hsla(0, 10%, 25%, 0.8), rgba(105, 30, 128, 0.1), rgba(19, 56, 180, 0.8), rgba(255, 255, 255, 0.8));
+	}
+
 }

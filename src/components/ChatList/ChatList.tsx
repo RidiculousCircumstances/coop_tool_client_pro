@@ -9,7 +9,8 @@ import cn from 'classnames';
 
 
 export const ChatList = ({...props}: ChatListProps): JSX.Element => {
-	const [isActiveDroptop, setActiveDroptop] = useState<boolean>(false);
+	const [isActiveChatActions, setActiveChatActions] = useState<boolean>(false);
+	const [isActiveRoomsMenu, setActiveRoomsMenu] = useState<boolean>(false);
 	const [droptopType, setDroptopType] = useState<'new' | 'join' | null>(null);
 
 
@@ -23,56 +24,75 @@ export const ChatList = ({...props}: ChatListProps): JSX.Element => {
 		droptopButtonLabel = CONST.DROPTOP_NEW_BUTTON;
 	}
 
-	const droptopHandler = (type: 'new' | 'join' | null) => {
+	const chatActionsHandler = (type: 'new' | 'join' | null) => {
 		
 		return () => {
 
-			if (isActiveDroptop && droptopType !== type) {
+			if (isActiveChatActions && droptopType !== type) {
 				setDroptopType(type);
-			} else if (isActiveDroptop && droptopType === type) {
-				setActiveDroptop(false)
+			} else if (isActiveChatActions && droptopType === type) {
+				setActiveChatActions(false)
 				setDroptopType(null);
 			} else {
-				setActiveDroptop(isActiveDroptop ? false : true)
+				setActiveChatActions(isActiveChatActions ? false : true)
 				setDroptopType(type);
 			}
 
 		}
 	}
 
+	const roomsMenuHandler = () => {
+		if (isActiveRoomsMenu) {
+			setActiveChatActions(false);
+			setDroptopType(null);
+			setActiveRoomsMenu(false);
+		} else {
+			setActiveRoomsMenu(true);
+		}
+	}
+
+
 
 	return (
 	<div className='chatList'>
-			<Button className='chatList__room-button' appearence={'long'}>Комнаты</Button>
-		<div className='chatList__main'>
+			<Button className={cn('chatList__room-button', 
+					{ 'chatList__room-button--active': isActiveRoomsMenu })} 
+					appearence={'long'} onClick={roomsMenuHandler}>Комнаты</Button>
+			<Droptop className='chatList__droptop' active={isActiveRoomsMenu}>
+
+			<div className='chatList__main'>
 				<div className='chatList__header'>
-					
-					<Button className={cn('chatList__action-button', 
-						{ 'chatList__action-button--active': droptopType === 'new'})} appearence={'normal'}
-						onClick={droptopHandler('new')}>New</Button>
+					<Button className={cn('chatList__action-button',
+						{ 'chatList__action-button--active': droptopType === 'new' })} appearence={'normal'}
+						onClick={chatActionsHandler('new')}>New</Button>
 
 					<Button className={cn('chatList__action-button',
 						{ 'chatList__action-button--active': droptopType === 'join' })} appearence={'normal'}
-						onClick={droptopHandler('join')}>Join</Button>
+						onClick={chatActionsHandler('join')}>Join</Button>
 				</div>
-
-				<Droptop active={isActiveDroptop}>
-					<span className='chatList__droptop-text'>{droptopText}</span>
-					<Input className='chatList__droptop-input' />
-					<div className='chatList__droptop-button-container'>
-						<Button className='chatList__droptop-button' appearence='small'>{droptopButtonLabel}</Button>
-					</div>
-					
-				</Droptop>
-
+		
+					<div className='chatList__chats-action-menu'>
+					<Droptop className='chatList__droptop-chats-action-menu' active={isActiveChatActions}>
+						<span className='chatList__droptop-chats-text'>{droptopText}</span>
+						<Input className='chatList__droptop-chats-input' />
+						<div className='chatList__droptop-chats-button-container'>
+							<Button className='chatList__droptop-chats-button' appearence='small'>{droptopButtonLabel}</Button>
+						</div>
+					</Droptop>
+				</div>
+	
+	
 				<ul className='chatList__listContainer'>
 					<li className='chatList__listItem'>
 						<div className='chatList__chat'>Комната юных натуралистов</div>
 						<div className='chatList__chat'>Три медведя</div>
 					</li>
 				</ul>
-		</div>
-	</div>
+
+			</div>
+		</Droptop>
+			
+	</div >
 
 	)
 }

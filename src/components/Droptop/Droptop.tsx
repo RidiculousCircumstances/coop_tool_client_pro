@@ -10,7 +10,8 @@ export const Droptop = ({ active, children, className, ...props }: DroptopProps)
 
 	return (
 
-		<div className={cn(className, 'droptop', { 'droptop--active': active })} {...props}>
+		<div className={cn(className, 'droptop', { 'droptop--active': active })} 
+				{...props}>
 			<div className={cn('droptop__content', { 'droptop__content--active': active })}>
 				{children}
 			</div>
