@@ -22,10 +22,10 @@
 
 	&__action-button {
 
-		@include withGradient(rgba(168, 159, 28, 0.3), rgba(77, 61, 61, 0.3), rgba(159, 39, 196, 0.3), rgba(19, 57, 180, 0.3), rgba(255, 255, 255, 0.1));
-		&:hover {
-			@include withGradient(rgba(168, 159, 28, 0.6), rgba(77, 61, 61, 0.3), rgba(159, 39, 196, 0.3), rgba(19, 57, 180, 0.3), rgba(255, 255, 255, 0.1));
+		&--active {
+			@include withGradient(rgba(168, 159, 28, 0.3), rgba(77, 61, 61, 1), rgba(159, 39, 196, 0.6), rgba(19, 57, 180, 0.3), rgba(255, 255, 255, 0.1));
 		}
+	
 	}
 
 	&__main {
@@ -62,5 +62,43 @@
 			@include withGradient(rgba(168, 159, 28, 0.6), rgba(77, 61, 61, 0.3), rgba(159, 39, 196, 0.3), rgba(19, 57, 180, 0.3), rgba(255, 255, 255, 0.1));
 		}
 
+	}
+
+	&__droptop-input {
+		display: flex;
+		justify-content: center;
+		box-sizing: border-box;
+
+		input {
+			width: 250px;
+			height: 30px;
+			text-align: left;
+		}
+	}
+
+	&__droptop-text {
+		box-sizing: border-box;
+		position: relative;
+		display: flex;
+		justify-content: center;
+		text-align: center;
+		padding-top: 10px;
+
+		@include getFont($size: large, $weight: 400, $color: $gray-color, $height: 5px);
+	}
+
+	&__droptop-button {
+		box-sizing: border-box;
+		position: relative;
+		width: fit-content;
+		padding-left: 8px;
+		padding-right: 8px;
+		right: 14px;
+		bottom: 10px;
+	}
+
+	&__droptop-button-container {
+		display: flex;
+		justify-content: flex-end;
 	}
 }

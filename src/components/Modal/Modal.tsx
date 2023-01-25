@@ -10,15 +10,7 @@ export const Modal = ({ active, children, setActive, type, ...props}: ModalProps
 	let buttonLable = '';
 	let modalText = '';
 
-	if (type === 'newChat') {
-		buttonLable = CONST.MODAL_NEW_BUTTON;
-		modalText = CONST.MODAL_NEW
-	} else if(type === 'joinChat') {
-		buttonLable = CONST.MODAL_JOIN_BUTTON;
-		modalText = CONST.MODAL_JOIN
-	} else {
-		throw new Error ('Unknown modal type');
-	}
+
 
 
 

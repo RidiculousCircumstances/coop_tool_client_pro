@@ -20,13 +20,26 @@
 		}
 	}
 
-	&--small {
+	&--normal {
 		height: 40px;
-		width: 275px;
+		width: 137.5px;
 		color: $gray-color;
-
+		@include withGradient(hsla(0, 17%, 7%, 0.9),
+				hsla(0, 10%, 25%, 0.8), rgba(105, 30, 128, 0.8), rgba(19, 56, 180, 0.8), rgba(255, 255, 255, 0.8));
 		&:hover {
-			@include withGradient(#150F0F, #201d1d9f, #9f27c411, #1339b409, #ffffff09);
+			@include withGradient(rgba(168, 159, 28, 0.4), rgba(77, 61, 61, 0.1), rgba(159, 39, 196, 0.1), rgba(19, 57, 180, 0.1), rgba(255, 255, 255, 0.1));
+		}
+	}
+
+	&--small {
+		height: 25px;
+		width: 90px;
+		color: $gray-color;
+		@include getFont($size: small, $weight: 400, $color: $gray-color, $height: 5px);
+		@include withGradient(rgba(168, 159, 28, 0.3), rgba(77, 61, 61, 0.3), rgba(159, 39, 196, 0.3), rgba(19, 57, 180, 0.3), rgba(255, 255, 255, 0.1));
+		
+		&:hover {
+			@include withGradient(rgba(168, 159, 28, 0.6), rgba(77, 61, 61, 0.3), rgba(159, 39, 196, 0.3), rgba(19, 57, 180, 0.3), rgba(255, 255, 255, 0.1));
 		}
 	}
 

@@ -1,0 +1,32 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+.droptop {
+	display: block;
+	position: relative;
+	width: 275px;
+	height: 1px;
+	padding-bottom: 0;
+	pointer-events: none;
+	transition: 0.6s;
+	border-radius: 0 0 16px 16px;
+
+	@include withGradient(hsla(0, 17%, 7%, 0.9),
+			hsla(0, 10%, 25%, 0.8), rgba(105, 30, 128, 0.8), rgba(19, 56, 180, 0.8), rgba(255, 255, 255, 0.8));
+	&--active {
+		pointer-events: all;
+		height: 130px;
+		transition: 0.6s;
+	
+	}
+
+	&__content {
+		opacity: 0;
+		&--active {
+			opacity: 1;
+			transition-delay: 0.5s;
+		}
+	}
+
+	
+}

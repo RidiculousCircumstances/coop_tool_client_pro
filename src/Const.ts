@@ -7,11 +7,11 @@ export const CONST = {
 	ALREADY_EXISTS_ERROR: '*Пользователь с таким email уже существует',
 	AUTH_ERROR: '*Введен неправильный логин или пароль',
 
-	MODAL_NEW: 'Введите название комнаты',
-	MODAL_NEW_BUTTON: 'Создать',
+	DROPTOP_NEW: 'Введите название комнаты',
+	DROPTOP_NEW_BUTTON: 'Создать',
 
-	MODAL_JOIN: 'Введите id комнаты',
-	MODAL_JOIN_BUTTON: 'Присоединиться'
+	DROPTOP_JOIN: 'Введите id комнаты',
+	DROPTOP_JOIN_BUTTON: 'Присоединиться'
 
 
 }

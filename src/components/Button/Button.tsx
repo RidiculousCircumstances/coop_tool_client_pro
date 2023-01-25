@@ -10,6 +10,7 @@ export const Button =
 		return (
 			<button className={cn(className, 'button', 
 				{ 'button--large': appearence  === 'large'},
+				{ 'button--normal': appearence === 'normal' },
 				{ 'button--small': appearence === 'small' },
 				{ 'button--long': appearence === 'long' }
 				)} {...props}></button>
