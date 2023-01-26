@@ -1,18 +1,24 @@
 import './chatList.scss';
 import { ChatListProps } from './ChatList.props'
 import { Button } from '../Button/Button';
-import { useState } from 'react';
+import { ChangeEvent, useContext, useState } from 'react';
 import { Droptop } from '../Droptop/Droptop';
 import { Input } from '../input/Input';
 import { CONST } from '../../Const';
 import cn from 'classnames';
+import { Context } from '../..';
+import { observer } from 'mobx-react-lite';
 
+export type ActionRoomMenuType = 'new' | 'join' | null;
 
-export const ChatList = ({...props}: ChatListProps): JSX.Element => {
+export const ChatList = observer(({...props}: ChatListProps): JSX.Element => {
 	const [isActiveChatActions, setActiveChatActions] = useState<boolean>(false);
 	const [isActiveRoomsMenu, setActiveRoomsMenu] = useState<boolean>(false);
-	const [droptopType, setDroptopType] = useState<'new' | 'join' | null>(null);
+	const [droptopType, setDroptopType] = useState<ActionRoomMenuType>(null);
+	const [roomData, setRoomData] = useState<string>('');
 
+	const { roomStorage } = useContext(Context);
+	
 
 	let droptopText = '';
 	let droptopButtonLabel = '';
@@ -24,16 +30,18 @@ export const ChatList = ({...props}: ChatListProps): JSX.Element => {
 		droptopButtonLabel = CONST.DROPTOP_NEW_BUTTON;
 	}
 
-	const chatActionsHandler = (type: 'new' | 'join' | null) => {
+	const chatActionsHandler = (type: ActionRoomMenuType) => {
 		
 		return () => {
 
 			if (isActiveChatActions && droptopType !== type) {
+				setRoomData('');
 				setDroptopType(type);
 			} else if (isActiveChatActions && droptopType === type) {
 				setActiveChatActions(false)
 				setDroptopType(null);
 			} else {
+				setRoomData('');
 				setActiveChatActions(isActiveChatActions ? false : true)
 				setDroptopType(type);
 			}
@@ -52,6 +60,23 @@ export const ChatList = ({...props}: ChatListProps): JSX.Element => {
 	}
 
 
+	const handleRoomInput = (e: ChangeEvent<HTMLInputElement>) => {
+		setRoomData(e.target.value);
+	}
+
+	const handleRoomButton = (type: ActionRoomMenuType) => {
+	
+		return () => {
+
+			if (type === 'join') {
+	
+				roomStorage.addRoom(roomData);
+			} else if (type === 'new') {
+				roomStorage.createRoom({name: roomData });
+			}
+		}
+
+	}
 
 	return (
 	<div className='chatList'>
@@ -74,9 +99,10 @@ export const ChatList = ({...props}: ChatListProps): JSX.Element => {
 					<div className='chatList__chats-action-menu'>
 					<Droptop className='chatList__droptop-chats-action-menu' active={isActiveChatActions}>
 						<span className='chatList__droptop-chats-text'>{droptopText}</span>
-						<Input className='chatList__droptop-chats-input' />
+						<Input className='chatList__droptop-chats-input' value={roomData} onChange={handleRoomInput}/>
 						<div className='chatList__droptop-chats-button-container'>
-							<Button className='chatList__droptop-chats-button' appearence='small'>{droptopButtonLabel}</Button>
+							<Button className='chatList__droptop-chats-button' 
+									appearence='small' onClick={handleRoomButton(droptopType)}>{droptopButtonLabel}</Button>
 						</div>
 					</Droptop>
 				</div>
@@ -95,4 +121,4 @@ export const ChatList = ({...props}: ChatListProps): JSX.Element => {
 	</div >
 
 	)
-}
+})

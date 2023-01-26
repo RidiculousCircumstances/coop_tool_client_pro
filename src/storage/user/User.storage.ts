@@ -3,11 +3,13 @@ import { makeAutoObservable } from 'mobx';
 import api from '../../api/http';
 import { AuthFormData } from '../../components/authentication/AuthFormInterface';
 import { RegistrationFormData } from '../../components/authentication/RegistrationFormInterface';
-import { ClientResponse } from '../../models/ClientResponse';
+import { ClientResponse } from '../../models/User/ClientResponse';
+import { AuthService } from '../../services/AuthService';
 
 export class UserStorage {
 	isAuth: boolean = false;
 	userData: ClientResponse | null = null;
+
 	constructor () {
 		makeAutoObservable(this);
 	}
@@ -32,22 +34,23 @@ export class UserStorage {
 	async login (email: string, password: string) {
 
 		try {
-			const res = await api.post<ClientResponse>('user/authorize', { email, password });
+			const res = await AuthService.login(email, password);
 			this.handleResponse(res);
 		} catch (e: any) {
 			return (e.response.status);
 		}
 	}
 
-	async registration (data: RegistrationFormData) {
-
-		try {
-			const res = await api.post<ClientResponse>('user/register', { ...data });
-			this.handleResponse(res);
-		} catch (e: any) {
-			return (e.response.status);
+	async registration ({email, nickname, password}: RegistrationFormData) {
+		if (nickname) {
+			try {
+				const res = await AuthService.register({ email, nickname, password });
+				this.handleResponse(res);
+			} catch (e: any) {
+				return (e.response.status);
+			}
 		}
-	
+		
 	}
 
 }
