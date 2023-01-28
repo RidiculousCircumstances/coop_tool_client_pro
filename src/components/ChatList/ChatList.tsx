@@ -1,13 +1,14 @@
 import './chatList.scss';
 import { ChatListProps } from './ChatList.props'
 import { Button } from '../Button/Button';
-import { ChangeEvent, useContext, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { Droptop } from '../Droptop/Droptop';
 import { Input } from '../input/Input';
 import { CONST } from '../../Const';
 import cn from 'classnames';
 import { Context } from '../..';
 import { observer } from 'mobx-react-lite';
+import { Room } from './Room/Room';
 
 export type ActionRoomMenuType = 'new' | 'join' | null;
 
@@ -16,6 +17,7 @@ export const ChatList = observer(({...props}: ChatListProps): JSX.Element => {
 	const [isActiveRoomsMenu, setActiveRoomsMenu] = useState<boolean>(false);
 	const [droptopType, setDroptopType] = useState<ActionRoomMenuType>(null);
 	const [roomData, setRoomData] = useState<string>('');
+	const [activeRoom, setActiveRoom] = useState<string | null>(null);
 
 	const { roomStorage } = useContext(Context);
 	
@@ -69,7 +71,6 @@ export const ChatList = observer(({...props}: ChatListProps): JSX.Element => {
 		return () => {
 
 			if (type === 'join') {
-	
 				roomStorage.addRoom(roomData);
 			} else if (type === 'new') {
 				roomStorage.createRoom({name: roomData });
@@ -77,6 +78,23 @@ export const ChatList = observer(({...props}: ChatListProps): JSX.Element => {
 		}
 
 	}
+
+
+	useEffect (() => {
+		roomStorage.getRooms();
+	}, []);
+
+	const rooms = (): JSX.Element[] => {
+		const rooms = roomStorage.rooms;
+		return rooms.map((room) => {
+			return (
+				<Room key={`${room.id}-room`} activeRoom={activeRoom} setActiveRoom={setActiveRoom} room={room}/>
+			)
+			
+		});
+
+	}
+
 
 	return (
 	<div className='chatList'>
@@ -109,11 +127,9 @@ export const ChatList = observer(({...props}: ChatListProps): JSX.Element => {
 	
 	
 				<ul className='chatList__listContainer'>
-					<li className='chatList__listItem'>
-						<div className='chatList__chat'>Комната юных натуралистов</div>
-						<div className='chatList__chat'>Три медведя</div>
-					</li>
+						{rooms()}
 				</ul>
+				
 
 			</div>
 		</Droptop>

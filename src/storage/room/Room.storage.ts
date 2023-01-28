@@ -25,11 +25,11 @@ export class RoomStorage {
 	 */
 	async addRoom(id: string) {
 		try {
-			const res = await RoomService.getChat(id);
-			alert(JSON.stringify(res.data));
-			this.appendRoom(res.data);
-		} catch (e) {
-
+			const room = await RoomService.getRoom(id);
+			alert(JSON.stringify(room.data));
+			this.appendRoom(room.data);
+		} catch (e: any) {
+			return (e.response.status);
 		}
 
 	}
@@ -41,10 +41,10 @@ export class RoomStorage {
 	 */
 	async createRoom (roomData: RoomCreateData) {
 		try {
-			const res = await RoomService.createRoom(roomData);
-			this.appendRoom(res.data);
-		} catch (e) {
-
+			const room = await RoomService.createRoom(roomData);
+			this.appendRoom(room.data);
+		} catch (e: any) {
+			return (e.response.status);
 		}
 	}
 
@@ -58,8 +58,14 @@ export class RoomStorage {
 	/**
 	 * Получает все комнаты пользователя при входе в приложение
 	 */
-	getRooms () {
+	async getRooms () {
+		try {
+			const rooms = await RoomService.getRooms();
+			this.rooms = rooms.data;
+		} catch (e) {
 
+		}
+	
 	}
 }
 

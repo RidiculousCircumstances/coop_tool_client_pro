@@ -7,6 +7,37 @@
 	box-sizing: border-box;
 	font-family: "Noto Sans", sans-serif;
 
+	
+
+	*::-webkit-scrollbar {
+		width: 6px;
+
+	}
+
+	*::-webkit-scrollbar-button {
+		height: 10px;
+	}
+
+	*::-webkit-scrollbar-track {
+		border-radius: 10px;
+		background: rgba(0, 0, 0, 0);
+	}
+
+	*::-webkit-scrollbar-thumb {
+		border-radius: 10px;
+		background: rgba(0, 0, 0, 0.2);
+	}
+
+	*::-webkit-scrollbar-thumb:hover {
+		background: rgba(0, 0, 0, 0.3);
+	}
+
+	*::-webkit-scrollbar-thumb:active {
+		background: rgba(0, 0, 0, .9);
+	}
+
+
+
 
 }
 
@@ -18,6 +49,8 @@
 	height: 100vh;
 	max-height: 100vh;
 	width: 100%;
-	@include withGradient(#412929a2, #251b1ba9, #dd35357a, #1339b473, #ffffff5e);
+
+	@include getMainColorTransparent();
+
 }
 

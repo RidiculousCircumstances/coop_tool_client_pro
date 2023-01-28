@@ -14,10 +14,10 @@
 	width: 1200px;
 	height: 680px;
 	border-radius: 16px;
-	@include withGradient(#41292904, #88424205, #9f27c405, #1339b409, #ffffff09);
+	@include getMainColorTransparent();
 
 	&:hover {
-		@include withGradient(#41292904, #88424205, #9f27c411, #1339b409, #ffffff09);
+		@include getMainColorTransparentHover();
 		transition: all .2s;
 	}
 
@@ -26,7 +26,7 @@
 		width: 60%;
 		height: 65%;
 		border-radius: 16px;
-		@include withGradient(#41292904, #3a1e1eb9, #9f27c411, #1339b409, #ffffff09);
+		@include getMainColorTransparent();
 		justify-content: center;
 		box-shadow: 1px 1px 10px $background-color;
 		display:flex;

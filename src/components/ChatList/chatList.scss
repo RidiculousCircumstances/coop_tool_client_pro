@@ -10,15 +10,15 @@
 	display: block;
 	height: 850px;
 
+
 	&__room-button {
 		border-radius: 16px;
 		transition-delay: 0.6s;
-		@include withGradient(hsla(0, 17%, 7%, 0.8),
-				hsla(0, 10%, 25%, 0.8), rgba(105, 30, 128, 0.8), rgba(19, 56, 180, 0.8), rgba(255, 255, 255, 0.8));
+		@include getMainColor();
 	
 		&:hover {
-			@include withGradient(hsla(22, 76%, 30%, 0.8),
-					hsla(0, 13%, 34%, 0.8), rgba(105, 30, 128, 0.8), rgba(19, 56, 180, 0.8), rgba(255, 255, 255, 0.8));
+			@include getMainColorHover();
+
 		}
 
 		&--active {
@@ -32,7 +32,7 @@
 	&__action-button {
 
 		&--active {
-			@include withGradient(rgba(168, 159, 28, 0.3), rgba(77, 61, 61, 1), rgba(159, 39, 196, 0.6), rgba(19, 57, 180, 0.3), rgba(255, 255, 255, 0.1));
+			@include getActiveColor();
 		}
 	
 	}
@@ -49,26 +49,10 @@
 		@include withGradient(#c56e6e13, #4d3e3e44, #9f27c411, #1339b409, #ffffff09);
 	}
 
-	&__listItem {
-		list-style-type: none;
-	}
-
 	&__listContainer {
 		margin-top: 30px;
 		margin-left: 0;
 		padding-left: 0;
-
-	}
-
-	&__chat {
-		color: $gray-color;
-		height: 60px;
-		line-height: 2;
-		margin: 1px 4px 0 4px;
-		padding-left: 10px;
-		&:hover {
-			@include withGradient(rgba(168, 159, 28, 0.6), rgba(77, 61, 61, 0.3), rgba(159, 39, 196, 0.3), rgba(19, 57, 180, 0.3), rgba(255, 255, 255, 0.1));
-		}
 
 	}
 

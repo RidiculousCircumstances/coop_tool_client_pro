@@ -11,8 +11,12 @@ export class RoomService {
 		return await api.post<RoomData>('chat', { ...data });
 	}
 
-	static async getChat(id: string): Promise<AxiosResponse<RoomData>> {
+	static async getRoom(id: string): Promise<AxiosResponse<RoomData>> {
 		return await api.get<RoomData>(`chat/${id}`,);
+	}
+
+	static async getRooms(): Promise<AxiosResponse<RoomData[]>> {
+		return await api.get<RoomData[]>(`chat`,);
 	}
 
 }

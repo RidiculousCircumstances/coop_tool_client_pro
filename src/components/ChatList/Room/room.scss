@@ -1,0 +1,47 @@
+@import '../../../styles/variables.scss';
+@import '../../../styles/mixins.scss';
+
+.room {
+
+	border-top: 1px solid $border-color;
+
+	&:hover {
+			@include getMainColorHover();
+	}
+
+	&__list-item {
+		list-style: none;
+	}
+
+	&__room {
+		display: flex;
+		width: 100%;
+
+		color: $gray-color;
+		min-height: 60px;
+		line-height: 2;
+		margin: 1px 4px 0 4px;
+		padding-left: 10px;	
+		
+
+		&--active {
+			@include getActiveColor();
+		}
+	
+
+	}
+
+	&__action-dots {
+		margin-left: auto;
+		padding-right: 10px;
+		
+		cursor: pointer;
+	}
+
+	&__action-modals {
+		position: relative;
+		width: 100px;
+		height: 100px;
+		pointer-events: none;
+	}
+}
