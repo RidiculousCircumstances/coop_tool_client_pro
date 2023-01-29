@@ -1,9 +1,9 @@
 import { JWTTokens } from './JWTTokens';
 
-export interface ClientResponse {
-	id?: number,
+export interface UserData {
+	id: number,
 	email: string;
-	ninkname: string;
+	nickname: string;
 	avatar?: string;
 	createdAt?: Date,
 	token?: string,

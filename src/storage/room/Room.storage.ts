@@ -1,20 +1,43 @@
 import { makeAutoObservable } from 'mobx';
 import { RoomCreateData } from '../../models/Room/RoomCreateData';
 import { RoomData } from '../../models/Room/RoomData';
+import { JoinRoom, LeaveRoom } from '../../services/gateway/events';
+import { Gateway } from '../../services/gateway/Gateway';
 import { RoomService } from '../../services/RoomService';
 
 export class RoomStorage {
 
 	rooms: RoomData[] = [];
 
+	activeRoom: RoomData | null = null;
 
+	gateway: Gateway = Gateway.getInstance();
+
+	roomJoinData: JoinRoom | null = null;
+
+	roomLeaveData: LeaveRoom | null = null;
 
 	constructor () {
 		makeAutoObservable(this);
 	}
 
+
+
 	private appendRoom(room: RoomData) {
-		this.rooms.push(room);
+		const checkExists = this.rooms.map((exRoom) => {
+			if (exRoom.id === room.id) {
+				return 1;
+			}
+		});
+
+		if (!checkExists.includes(1)) {
+			this.rooms.unshift(room);
+		}			
+
+	}
+
+	public setRooms(rooms: RoomData[]) {
+		this.rooms = rooms;
 	}
 
 	/**
@@ -51,8 +74,13 @@ export class RoomStorage {
 	/**
 	 * Устанавливает активную комнату при ее выборе из списка
 	 */
-	setActiveRoom () {
+	setActiveRoom (room: RoomData, clientId: number) {
 
+		if(this.activeRoom) {
+			this.gateway.leaveRoom({ roomId: this.activeRoom.id, clientId});
+		}
+		this.gateway.joinRoom({ roomId: room.id, clientId });
+		this.activeRoom = room;
 	}
 
 	/**
@@ -61,11 +89,19 @@ export class RoomStorage {
 	async getRooms () {
 		try {
 			const rooms = await RoomService.getRooms();
-			this.rooms = rooms.data;
+			this.setRooms(rooms.data);
 		} catch (e) {
 
 		}
 	
+	}
+
+	/**
+	 * Делегирует прослушку комнаты
+	 */
+	async listenRoom () {
+		this.roomJoinData = await this.gateway.listenJoin() as JoinRoom;
+		this.roomLeaveData = await this.gateway.listenLeave() as LeaveRoom;
 	}
 }
 

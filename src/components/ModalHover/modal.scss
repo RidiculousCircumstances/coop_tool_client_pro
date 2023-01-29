@@ -5,10 +5,11 @@
 	position: fixed;
 	opacity: 0;
 	pointer-events: none;
-
+	transition: opacity 1s;
+	
 	&--active {
 		pointer-events: all;
 		opacity: 1;
-		transition: 0.1s;
+		transition: opacity 1s;
 	}
 }

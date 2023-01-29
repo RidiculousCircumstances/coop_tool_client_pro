@@ -3,12 +3,12 @@ import { makeAutoObservable } from 'mobx';
 import api from '../../api/http';
 import { AuthFormData } from '../../components/authentication/AuthFormInterface';
 import { RegistrationFormData } from '../../components/authentication/RegistrationFormInterface';
-import { ClientResponse } from '../../models/User/ClientResponse';
+import { UserData } from '../../models/User/UserData';
 import { AuthService } from '../../services/AuthService';
 
 export class UserStorage {
 	isAuth: boolean = false;
-	userData: ClientResponse | null = null;
+	userData: UserData | null = null;
 
 	constructor () {
 		makeAutoObservable(this);
@@ -27,7 +27,7 @@ export class UserStorage {
 		this.isAuth = bool;
 	}
 
-	setUserData (data: ClientResponse) {
+	setUserData (data: UserData) {
 		this.userData = data;
 	}
 

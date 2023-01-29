@@ -84,14 +84,21 @@ export const ChatList = observer(({...props}: ChatListProps): JSX.Element => {
 		roomStorage.getRooms();
 	}, []);
 
-	const rooms = (): JSX.Element[] => {
+	const rooms = (): JSX.Element[] | JSX.Element => {
 		const rooms = roomStorage.rooms;
-		return rooms.map((room) => {
-			return (
-				<Room key={`${room.id}-room`} activeRoom={activeRoom} setActiveRoom={setActiveRoom} room={room}/>
-			)
-			
-		});
+		if (rooms.length) {
+			return rooms.map((room) => {
+
+				return (
+					<Room key={`${room.id}-room`} activeRoom={activeRoom} setActiveRoom={setActiveRoom} room={room} />
+				)
+
+			});
+		} else {
+			return (<div>Добавьте комнату</div>)
+		}
+
+		
 
 	}
 

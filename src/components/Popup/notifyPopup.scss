@@ -1,0 +1,29 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+.notifyPopup {
+	position: fixed;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 1s;
+	
+	&--active {
+		pointer-events: all;
+		opacity: 1;
+		transition: opacity 1s;
+	}
+
+	&__container {
+		position: fixed;
+		right: 10px;
+		bottom: 20px;
+		width: 210px;
+		padding: 10px;
+		height: fit-content;
+
+		border-radius: 10px;
+
+		@include getMainColor();
+		@include getFont($size: large, $weight: 400, $color: $green-color, $height: 5px);
+	}
+}
