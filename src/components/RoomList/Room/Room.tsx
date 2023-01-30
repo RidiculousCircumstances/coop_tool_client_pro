@@ -10,9 +10,9 @@ import { observer } from 'mobx-react-lite';
 
 export const Room = observer(({room, activeRoom, setActiveRoom, className, ...props}: RoomProps):JSX.Element => {
 
-	const [showModal, setShowModal] = useState<boolean>(false);
-	const [modalPosition, setModalPosition] = useState<{x: string, y: string} | null>(null);
-	const [isHovered, setHovered] = useState<boolean>(false);
+	const [ShowRoomActionPopup, setShowRoomActionPopup] = useState<boolean>(false);
+	const [roomActionPopupPosition, setRoomActionPopupPosition] = useState<{x: string, y: string} | null>(null);
+	const [isHoveredRoom, setHoveredRoom] = useState<boolean>(false);
 	const { roomStorage, userStorage } = useContext(Context);
 
 
@@ -31,26 +31,26 @@ export const Room = observer(({room, activeRoom, setActiveRoom, className, ...pr
 	const handleShowPopupOn = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
 		const coords = e.currentTarget.getBoundingClientRect();
 		setTimeout(() => {
-			setShowModal(true);
-			setModalPosition({ x: `${coords.x}px`, y: `${coords.y}px` });
+			setShowRoomActionPopup(true);
+			setRoomActionPopupPosition({ x: `${coords.x}px`, y: `${coords.y}px` });
 		}, 400)
 
 	}
 
-	const handleShowPopupOff = () => {
+	const handleShowRoomActionsPopupOff = () => {
 		
 		setTimeout(() => {
-			setShowModal(false);
+			setShowRoomActionPopup(false);
 		}, 400)
 	
 
 	}
 
 	const handleRoomHover = () => {
-		if (isHovered) {
-			setHovered(false);
+		if (isHoveredRoom) {
+			setHoveredRoom(false);
 		} else {
-			setHovered(true);
+			setHoveredRoom(true);
 		}
 	
 	}
@@ -68,11 +68,11 @@ export const Room = observer(({room, activeRoom, setActiveRoom, className, ...pr
 				{...props}>
 				<span>{room.name}</span>
 				
-				<div key={`${room.id}-span`} className={cn('room__action-dots', {'room__action-dots--active': isHovered})}
-					onMouseEnter={(e) => handleShowPopupOn(e)} onMouseLeave={ handleShowPopupOff }
+				<div key={`${room.id}-span`} className={cn('room__action-dots', {'room__action-dots--active': isHoveredRoom})}
+					onMouseEnter={(e) => handleShowPopupOn(e)} onMouseLeave={ handleShowRoomActionsPopupOff }
 					>
 						...
-					<ModalHover onMouseOver={(e) => handleShowPopupOn(e)} onMouseLeave={handleShowPopupOff} active={showModal} coord={modalPosition} >
+					<ModalHover onMouseOver={(e) => handleShowPopupOn(e)} onMouseLeave={handleShowRoomActionsPopupOff} active={ShowRoomActionPopup} coord={roomActionPopupPosition} >
 						<div className='room__modals'>
 							
 							<div onClick={handleCopyLink} className='room__modals-action'>{CONST.COPY_TEXT}</div>
@@ -81,11 +81,7 @@ export const Room = observer(({room, activeRoom, setActiveRoom, className, ...pr
 						</div>
 					</ModalHover>
 				</div>
-
-
 			</div>
-
-
 		</li>
 	);
 })

@@ -103,5 +103,38 @@ export class RoomStorage {
 		this.roomJoinData = await this.gateway.listenJoin() as JoinRoom;
 		this.roomLeaveData = await this.gateway.listenLeave() as LeaveRoom;
 	}
-}
 
+	/**
+	 * 
+	 * @param targetUserId 
+	 * @returns 
+	 * Получает данные пользователя в активной комнате по id
+	 */
+	private getTargetUser(targetUserId: number) {
+
+		if (this.activeRoom) {
+			return this.activeRoom?.users.filter((user) => {
+				return user.id === targetUserId;
+			})[0];
+		}
+			
+	}
+
+	public getJoinedUser () {
+		const joinedUserId = this.roomJoinData?.clientId;
+		if (joinedUserId) {
+			return this.getTargetUser(joinedUserId);
+		}
+		return null;
+		
+	}
+
+	public getLeavedUser() {
+		const leavedUser = this.roomLeaveData?.clientId;
+		if (leavedUser) {
+			return this.getTargetUser(leavedUser);
+		}
+		return null;
+	}
+
+}

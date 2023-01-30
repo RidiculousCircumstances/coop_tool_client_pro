@@ -10,11 +10,18 @@
 		margin: 8px 0 25px;
 		box-sizing: border-box;
 		text-align: center;
-
-		border-radius: 4px;
+		border: 1px solid $border-color;
+		border-radius: 8px;
 		color: $gray-color;
-		@include withGradient(#41292941, #251919b9, #9f27c411, #1339b409, #ffffff09);
+		// @include withGradient(#41292941, #251919b9, #9f27c411, #1339b409, #ffffff09);
+		background: none;
+			background-blend-mode: none;
+		&:focus {
+			outline: none !important;
+		}
 	}
+
+
 	
 	&--error {
 

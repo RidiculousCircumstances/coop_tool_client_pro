@@ -1,6 +1,7 @@
-import { InputProps } from './Input.props';
+
 import cn from 'classnames';
 import { ForwardedRef, forwardRef } from 'react';
+import { InputProps } from './Input.props';
 import './input.scss';
 
 export const Input = forwardRef(

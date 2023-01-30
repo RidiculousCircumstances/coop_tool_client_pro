@@ -2,9 +2,10 @@ import { observer } from 'mobx-react-lite';
 import { useContext, useEffect, useState } from 'react';
 import { Context } from '.';
 import { Authentication } from './components/authentication/Authentication';
-import { ChatList } from './components/ChatList/ChatList';
+import { RoomList } from './components/RoomList/RoomList';
 import { NotifyPopup } from './components/Popup/NotifyPopup';
 import './styles/app.scss';
+import { Chat } from './components/Chat/Chat';
 
 export const App = observer(() => {
   const { userStorage, roomStorage } = useContext(Context);
@@ -14,21 +15,16 @@ export const App = observer(() => {
 
 
 
-
+  /**
+   * Управляет событием присоединения к комнате
+   */
   useEffect(() => {
  
     if (roomStorage.roomJoinData) {
 
-
+      const user = roomStorage.getJoinedUser();
       setActiveJoinPopup(true);
-
-      const user = (roomStorage.rooms.map((room) => {
-        return room.users.filter((user) => {
-          return user.id === roomStorage.roomJoinData?.clientId;
-        });
-      })).flat()[0];
-
-      setNickname(user.nickname);
+      setNickname(user!.nickname);
     }
 
     setTimeout(() => {
@@ -37,20 +33,17 @@ export const App = observer(() => {
 
   }, [roomStorage.roomJoinData]);
 
+
+  /**
+   * Управляет событием выхода из комнаты
+   */
   useEffect(() => {
 
-    if (roomStorage.roomLeaveData) {
+    if (roomStorage.roomJoinData) {
 
-
+      const user = roomStorage.getLeavedUser();
       setActiveLeavePopup(true);
-
-      const user = (roomStorage.rooms.map((room) => {
-        return room.users.filter((user) => {
-          return user.id === roomStorage.roomLeaveData?.clientId;
-        });
-      })).flat()[0];
-
-      setNickname(user.nickname);
+      setNickname(user!.nickname);
     }
 
     setTimeout(() => {
@@ -63,9 +56,13 @@ export const App = observer(() => {
   return (
     <div className="image">
       <div className="app">
+
         { userStorage.isAuth ?
-          <div>
-            <ChatList />
+          <div style={{ position: 'relative', top: '20px', left: '20px' }}>
+
+            <Chat />
+
+            <RoomList />
 
             <NotifyPopup active={activeJoinPopup}>
                 <span>{nickname} присоединился к комнате</span>
@@ -76,8 +73,10 @@ export const App = observer(() => {
             </NotifyPopup>
 
           </div> :
+
           <Authentication /> 
         }
+
       </div>
     </div>
 

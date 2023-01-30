@@ -1,5 +1,5 @@
-import './chatList.scss';
-import { ChatListProps } from './ChatList.props'
+import './roomList.scss';
+import { RoomListProps } from './RoomList.props'
 import { Button } from '../Button/Button';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { Droptop } from '../Droptop/Droptop';
@@ -12,8 +12,9 @@ import { Room } from './Room/Room';
 
 export type ActionRoomMenuType = 'new' | 'join' | null;
 
-export const ChatList = observer(({...props}: ChatListProps): JSX.Element => {
-	const [isActiveChatActions, setActiveChatActions] = useState<boolean>(false);
+export const RoomList = observer(({...props}: RoomListProps): JSX.Element => {
+	
+	const [isActiveRoomActions, setActiveRoomActions] = useState<boolean>(false);
 	const [isActiveRoomsMenu, setActiveRoomsMenu] = useState<boolean>(false);
 	const [droptopType, setDroptopType] = useState<ActionRoomMenuType>(null);
 	const [roomData, setRoomData] = useState<string>('');
@@ -32,19 +33,19 @@ export const ChatList = observer(({...props}: ChatListProps): JSX.Element => {
 		droptopButtonLabel = CONST.DROPTOP_NEW_BUTTON;
 	}
 
-	const chatActionsHandler = (type: ActionRoomMenuType) => {
+	const roomsActionHandler = (type: ActionRoomMenuType) => {
 		
 		return () => {
 
-			if (isActiveChatActions && droptopType !== type) {
+			if (isActiveRoomActions && droptopType !== type) {
 				setRoomData('');
 				setDroptopType(type);
-			} else if (isActiveChatActions && droptopType === type) {
-				setActiveChatActions(false)
+			} else if (isActiveRoomActions && droptopType === type) {
+				setActiveRoomActions(false)
 				setDroptopType(null);
 			} else {
 				setRoomData('');
-				setActiveChatActions(isActiveChatActions ? false : true)
+				setActiveRoomActions(isActiveRoomActions ? false : true)
 				setDroptopType(type);
 			}
 
@@ -53,7 +54,7 @@ export const ChatList = observer(({...props}: ChatListProps): JSX.Element => {
 
 	const roomsMenuHandler = () => {
 		if (isActiveRoomsMenu) {
-			setActiveChatActions(false);
+			setActiveRoomActions(false);
 			setDroptopType(null);
 			setActiveRoomsMenu(false);
 		} else {
@@ -66,7 +67,7 @@ export const ChatList = observer(({...props}: ChatListProps): JSX.Element => {
 		setRoomData(e.target.value);
 	}
 
-	const handleRoomButton = (type: ActionRoomMenuType) => {
+	const handleRoomsActionButton = (type: ActionRoomMenuType) => {
 	
 		return () => {
 
@@ -104,36 +105,36 @@ export const ChatList = observer(({...props}: ChatListProps): JSX.Element => {
 
 
 	return (
-	<div className='chatList'>
-			<Button className={cn('chatList__room-button', 
-					{ 'chatList__room-button--active': isActiveRoomsMenu })} 
+	<div className='roomList'>
+			<Button className={cn('roomList__room-button', 
+					{ 'roomList__room-button--active': isActiveRoomsMenu })} 
 					appearence={'long'} onClick={roomsMenuHandler}>Комнаты</Button>
-			<Droptop className='chatList__droptop' active={isActiveRoomsMenu}>
+			<Droptop className='roomList__droptop' active={isActiveRoomsMenu}>
 
-			<div className='chatList__main'>
-				<div className='chatList__header'>
-					<Button className={cn('chatList__action-button',
-						{ 'chatList__action-button--active': droptopType === 'new' })} appearence={'normal'}
-						onClick={chatActionsHandler('new')}>New</Button>
+			<div className='roomList__main'>
+				<div className='roomList__header'>
+					<Button className={cn('roomList__action-button',
+						{ 'roomList__action-button--active': droptopType === 'new' })} appearence={'normal'}
+						onClick={roomsActionHandler('new')}>New</Button>
 
-					<Button className={cn('chatList__action-button',
-						{ 'chatList__action-button--active': droptopType === 'join' })} appearence={'normal'}
-						onClick={chatActionsHandler('join')}>Join</Button>
+					<Button className={cn('roomList__action-button',
+						{ 'roomList__action-button--active': droptopType === 'join' })} appearence={'normal'}
+						onClick={roomsActionHandler('join')}>Join</Button>
 				</div>
 		
-					<div className='chatList__chats-action-menu'>
-					<Droptop className='chatList__droptop-chats-action-menu' active={isActiveChatActions}>
-						<span className='chatList__droptop-chats-text'>{droptopText}</span>
-						<Input className='chatList__droptop-chats-input' value={roomData} onChange={handleRoomInput}/>
-						<div className='chatList__droptop-chats-button-container'>
-							<Button className='chatList__droptop-chats-button' 
-									appearence='small' onClick={handleRoomButton(droptopType)}>{droptopButtonLabel}</Button>
+					<div className='roomList__chats-action-menu'>
+						<Droptop className='roomList__droptop-chats-action-menu roomList__droptop-no-border-radius' active={isActiveRoomActions}>
+						<span className='roomList__droptop-chats-text'>{droptopText}</span>
+						<Input className='roomList__droptop-chats-input' value={roomData} onChange={handleRoomInput}/>
+						<div className='roomList__droptop-chats-button-container'>
+							<Button className='roomList__droptop-chats-button' 
+									appearence='small' onClick={handleRoomsActionButton(droptopType)}>{droptopButtonLabel}</Button>
 						</div>
 					</Droptop>
 				</div>
 	
 	
-				<ul className='chatList__listContainer'>
+				<ul className='roomList__listContainer'>
 						{rooms()}
 				</ul>
 				
