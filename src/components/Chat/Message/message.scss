@@ -1,0 +1,29 @@
+@import '../../../styles/mixins.scss';
+@import '../../../styles/variables.scss';
+
+.message {
+	display: flex;
+	margin-top: 30px;
+	padding: 0 50px;
+
+	&__user-name {
+		@include getFont($size: medium, $weight: 600, $color: $gray-color, $height: 24px);
+	}
+
+	&__time {
+		margin-bottom: -3px;
+		@include getFont($size: small, $weight: 500, $color: $gray-color, $height: 24px);
+	}
+
+	&__body {
+		@include getFont($size: medium, $weight: 600, $color: $gray-color, $height: 24px);
+	}
+
+	&__title {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin-bottom: 5px;
+
+	}
+}
