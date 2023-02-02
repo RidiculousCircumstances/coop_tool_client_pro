@@ -18,12 +18,18 @@ export const Room = observer(({room, activeRoom, setActiveRoom, className, ...pr
 
 	const clipboard = useClipboard();
 
+
+	/**
+	 * Очень важный обработчик - устанавливает прослушку всей комнаты, присоединяет к комнате.
+	 */
 	const handleJoinRoom = () => {
 		if (room.id !== activeRoom) {
 			const userId = userStorage.userData?.id;
 			roomStorage.setActiveRoom(room, userId!);
+
 			roomStorage.listenRoom();
 			setActiveRoom(room.id);
+	
 		}
 		
 	}

@@ -1,6 +1,5 @@
 import { AxiosResponse } from 'axios';
 import api from '../api/http';
-import { CreateMessageData } from '../models/Message/CreateMessageData';
 import { MessageData } from '../models/Message/MessageData';
 
 export class ChatService {
@@ -14,8 +13,12 @@ export class ChatService {
 		return await api.get<MessageData[]>(`message/chat/${chatId}`);
 	}
 
-	static async createMessage(data: CreateMessageData): Promise<AxiosResponse<CreateMessageData>> {
-		return await api.post<CreateMessageData>('message', { ...data });
+	static async sendMessage(formData: FormData): Promise<AxiosResponse<MessageData>> {
+		return await api.post<MessageData>('message', formData, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+			}
+		} );
 	}
 
 

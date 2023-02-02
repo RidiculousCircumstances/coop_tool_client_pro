@@ -1,11 +1,16 @@
 import { MessageProps } from './Message.props';
 import './message.scss';
 import cn from 'classnames';
+import { useContext } from 'react';
+import { Context } from '../../..';
 
 export const Message = ({className, data, ...props}: MessageProps): JSX.Element => {
 
 	const date = new Date(data.created);
-	const time = `${date.getHours()}:${date.getMinutes()} ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
+	const time = `${date.getHours()}:${date.getMinutes()} ${date.getDay()}/${date.getMonth()}/${date.getFullYear()}`
+
+	const { userStorage } = useContext(Context);
+	const senderId = userStorage.userData?.id;
 
 	return (
 		<div className={cn(className, 'message')}   {...props}>
@@ -19,7 +24,8 @@ export const Message = ({className, data, ...props}: MessageProps): JSX.Element 
 
 			<div className='message__container'>
 				<div className='message__title'>
-					<div className='message__user-name'>
+					<div className={cn('message__user-name', 
+						{ 'message__user-name--our': senderId === data.userId })}>
 						{data.nickname}
 					</div>
 
@@ -33,13 +39,8 @@ export const Message = ({className, data, ...props}: MessageProps): JSX.Element 
 				</div>
 			</div>
 
-			
-			
-
-			
-
-			{ data.image ?? <div className='message__image'>
-				{data.image}
+			{data.image && <div className='message__image-container'>
+				<img src={data.image} alt={data.image} className='message__image'/>
 			</div>}
 
 		</div>

@@ -1,14 +1,25 @@
 import { makeAutoObservable } from 'mobx';
 import { MessageData } from '../../models/Message/MessageData';
 import { ChatService } from '../../services/ChatService';
+import { Gateway } from '../../services/gateway/Gateway';
 
 export class ChatStorage {
 
 	private _messages: MessageData[] | null = null;
+	
+	gateway: Gateway = Gateway.getInstance();
+
+
 
 	set messages(messages: MessageData[] | null) {
 		if (messages) {
 			this._messages = messages.reverse();
+		}
+	}
+
+	set message(message: MessageData | null) {
+		if (message) {
+			this._messages?.push(message);
 		}
 	}
 
@@ -17,7 +28,6 @@ export class ChatStorage {
 	}
 
 	constructor () {
-
 		makeAutoObservable(this);
 	}
 
@@ -26,9 +36,38 @@ export class ChatStorage {
 			const messages = await ChatService.getMessages(chatId);
 			this.messages = messages.data;
 		} catch (e: any) {
+			console.log(e.message);
 			return (e.response.status);
 		}
 
 	}
+
+	async getMessage (messageid: number) {
+		try {
+			const message = await ChatService.getMessage(messageid);
+			this.message = message.data;
+		} catch (e: any) {
+			console.log(e);
+			return (e.response.status);
+		}
+	}
+
+	async sendMessage (data: FormData) {
+		try {
+			const {data: messageData} = await ChatService.sendMessage(data);
+			this.message = messageData;
+			this.gateway.notifySendMessage({
+				messageId: messageData.messageId,
+				roomId: messageData.chatId,
+				userId: messageData.userId,
+
+			});
+		} catch (e: any) {
+			console.log(e);
+			return (e.message);
+		}
+	}
+
+
 }
 

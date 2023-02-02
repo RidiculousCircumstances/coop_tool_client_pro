@@ -1,17 +1,18 @@
 import { makeAutoObservable } from 'mobx';
 import { Manager, Socket } from 'socket.io-client';
 import { CONST } from '../../Const';
-import { JoinRoom, LeaveRoom } from './events';
+import { JoinRoom, LeaveRoom, SendMessage } from './events';
 
 export class Gateway {
 
 	private static instance: Gateway;
 	private manager: Manager;
-
+	private socket: Socket;
 
 
 	private constructor() {
 		this.manager = new Manager(CONST.SOCKET_URL);
+		this.socket = new Socket(this.manager, '/');
 		makeAutoObservable(this)
 	}
 
@@ -24,34 +25,40 @@ export class Gateway {
 	}
 
 	public joinRoom (data: JoinRoom) {
-		const room = this.manager.socket('/');
-		room.emit('joinRoom', data);
+		this.socket.emit('joinRoom', data);
 	}
 
 	public leaveRoom (data: LeaveRoom) {
-		const room = this.manager.socket('/');
-		room.emit('leaveRoom', data);
+		this.socket.emit('leaveRoom', data);
 	}
 
 	public listenJoin() {
-		const room = this.manager.socket('/');
-
 		return new Promise((resolve) => {
-			room.on('joinRoom', (data: JoinRoom) => {
+			this.socket.on('joinRoom', (data: JoinRoom) => {
 				resolve(data);
 			});
 		});
 	}
 
 	public listenLeave() {
-		const room = this.manager.socket('/');
-
-		return new Promise((resolve) => {
-			room.on('leaveRoom', (data: LeaveRoom) => {
+			return new Promise((resolve) => {
+			this.socket.on('leaveRoom', (data: LeaveRoom) => {
 				resolve(data);
+				});
 			});
-		});
 	}
 
+	public notifySendMessage (data: SendMessage) {
+		this.socket.emit('sendMessage', data);
+	}
+
+	public listenMessages() {
+		return new Promise((resolve) => {
+			this.socket.on('sendMessage', (data: SendMessage) => {
+				console.log(data)
+				resolve(data);
+				});
+			});
+	}
 
 }

@@ -1,7 +1,8 @@
 import { makeAutoObservable } from 'mobx';
+import { MessageData } from '../../models/Message/MessageData';
 import { RoomCreateData } from '../../models/Room/RoomCreateData';
 import { RoomData } from '../../models/Room/RoomData';
-import { JoinRoom, LeaveRoom } from '../../services/gateway/events';
+import { JoinRoom, LeaveRoom, SendMessage } from '../../services/gateway/events';
 import { Gateway } from '../../services/gateway/Gateway';
 import { RoomService } from '../../services/RoomService';
 
@@ -16,6 +17,8 @@ export class RoomStorage {
 	roomJoinData: JoinRoom | null = null;
 
 	roomLeaveData: LeaveRoom | null = null;
+
+	incomingMessage: SendMessage | null = null;
 
 	constructor () {
 		makeAutoObservable(this);
@@ -91,7 +94,7 @@ export class RoomStorage {
 			const rooms = await RoomService.getRooms();
 			this.setRooms(rooms.data);
 		} catch (e) {
-
+			console.log(e);
 		}
 	
 	}
@@ -102,6 +105,7 @@ export class RoomStorage {
 	async listenRoom () {
 		this.roomJoinData = await this.gateway.listenJoin() as JoinRoom;
 		this.roomLeaveData = await this.gateway.listenLeave() as LeaveRoom;
+		this.incomingMessage = await this.gateway.listenMessages() as SendMessage;
 	}
 
 	/**
@@ -113,7 +117,7 @@ export class RoomStorage {
 	private getTargetUser(targetUserId: number) {
 
 		if (this.activeRoom) {
-			return this.activeRoom?.users.filter((user) => {
+			return this.activeRoom.users.filter((user) => {
 				return user.id === targetUserId;
 			})[0];
 		}
@@ -136,5 +140,6 @@ export class RoomStorage {
 		}
 		return null;
 	}
+
 
 }

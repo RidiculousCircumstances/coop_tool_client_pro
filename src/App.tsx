@@ -31,7 +31,7 @@ export const App = observer(() => {
       setActiveJoinPopup(false);
     }, 3000);
 
-  }, [roomStorage.roomJoinData]);
+  }, [roomStorage.roomJoinData, roomStorage]);
 
 
   /**
@@ -50,7 +50,7 @@ export const App = observer(() => {
       setActiveLeavePopup(false);
     }, 3000);
 
-  }, [roomStorage.roomLeaveData]);
+  }, [roomStorage.roomLeaveData, roomStorage]);
 
 
   return (
