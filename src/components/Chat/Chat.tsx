@@ -25,8 +25,14 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 
 
 	useEffect(() => {
-		roomStorage.listenRoom();
-	}, [roomStorage.activeRoom]);
+
+		const listen = async () => {
+			await chatStorage.listenMessage();
+		}
+
+		listen();
+
+	}, [chatStorage.incomingMessage, chatStorage]);
 
 	/**
 	 * Получает сообщения чата с установленным лимитом
@@ -45,23 +51,24 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 		}
 		loadMessages();
 
-	}, [roomStorage.activeRoom]);
+	}, [roomStorage.activeRoom, roomStorage, chatStorage]);
 
 	/**
 	 * Получает входящее сообщение
 	 */
 	useEffect(() => {
-		const incomingMessage = roomStorage.incomingMessage;
+		const incomingMessage = chatStorage.incomingMessage;
 		if (!incomingMessage) {
 			return;
 		}
-		chatStorage.getMessage(incomingMessage.messageId);
 
-	}, [roomStorage.incomingMessage]);
+		const getMessage = async () => {
+			await chatStorage.getMessage(incomingMessage.messageId);
+		}
 
+		getMessage();
 
-
-
+	}, [chatStorage.incomingMessage, chatStorage]);
 
 	/**
 	 * 

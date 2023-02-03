@@ -3,8 +3,9 @@ import './message.scss';
 import cn from 'classnames';
 import { useContext } from 'react';
 import { Context } from '../../..';
+import { observer } from 'mobx-react-lite';
 
-export const Message = ({className, data, ...props}: MessageProps): JSX.Element => {
+export const Message = observer(({className, data, ...props}: MessageProps): JSX.Element => {
 
 	const date = new Date(data.created);
 	const time = `${date.getHours()}:${date.getMinutes()} ${date.getDay()}/${date.getMonth()}/${date.getFullYear()}`
@@ -15,8 +16,6 @@ export const Message = ({className, data, ...props}: MessageProps): JSX.Element 
 	return (
 		<div className={cn(className, 'message')}   {...props}>
 
-
-			
 			<div className='message_user-avatar'>
 				{}
 			</div>
@@ -45,4 +44,4 @@ export const Message = ({className, data, ...props}: MessageProps): JSX.Element 
 
 		</div>
 	)
-}
+})

@@ -18,8 +18,6 @@ export class RoomStorage {
 
 	roomLeaveData: LeaveRoom | null = null;
 
-	incomingMessage: SendMessage | null = null;
-
 	constructor () {
 		makeAutoObservable(this);
 	}
@@ -52,7 +50,6 @@ export class RoomStorage {
 	async addRoom(id: string) {
 		try {
 			const room = await RoomService.getRoom(id);
-			alert(JSON.stringify(room.data));
 			this.appendRoom(room.data);
 		} catch (e: any) {
 			return (e.response.status);
@@ -105,7 +102,7 @@ export class RoomStorage {
 	async listenRoom () {
 		this.roomJoinData = await this.gateway.listenJoin() as JoinRoom;
 		this.roomLeaveData = await this.gateway.listenLeave() as LeaveRoom;
-		this.incomingMessage = await this.gateway.listenMessages() as SendMessage;
+		
 	}
 
 	/**

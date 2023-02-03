@@ -1,11 +1,14 @@
 import { makeAutoObservable } from 'mobx';
 import { MessageData } from '../../models/Message/MessageData';
 import { ChatService } from '../../services/ChatService';
+import { SendMessage } from '../../services/gateway/events';
 import { Gateway } from '../../services/gateway/Gateway';
 
 export class ChatStorage {
 
 	private _messages: MessageData[] | null = null;
+
+	incomingMessage: SendMessage | null = null;
 	
 	gateway: Gateway = Gateway.getInstance();
 
@@ -66,6 +69,10 @@ export class ChatStorage {
 			console.log(e);
 			return (e.message);
 		}
+	}
+
+	async listenMessage() {
+		this.incomingMessage = await this.gateway.listenMessages() as SendMessage;
 	}
 
 

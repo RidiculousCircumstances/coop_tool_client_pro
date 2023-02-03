@@ -1,5 +1,7 @@
 import { AxiosResponse } from 'axios';
+import { randomUUID } from 'crypto';
 import { makeAutoObservable } from 'mobx';
+import { v4 } from 'uuid';
 import api from '../../api/http';
 import { AuthFormData } from '../../components/authentication/AuthFormInterface';
 import { RegistrationFormData } from '../../components/authentication/RegistrationFormInterface';
@@ -9,6 +11,7 @@ import { AuthService } from '../../services/AuthService';
 export class UserStorage {
 	isAuth: boolean = false;
 	userData: UserData | null = null;
+
 
 	constructor () {
 		makeAutoObservable(this);
@@ -34,10 +37,12 @@ export class UserStorage {
 	async login (email: string, password: string) {
 
 		try {
+
 			const res = await AuthService.login(email, password);
+		
 			this.handleResponse(res);
 		} catch (e: any) {
-			return (e.response.status);
+			return (e);
 		}
 	}
 

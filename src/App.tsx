@@ -6,26 +6,28 @@ import { RoomList } from './components/RoomList/RoomList';
 import { NotifyPopup } from './components/Popup/NotifyPopup';
 import './styles/app.scss';
 import { Chat } from './components/Chat/Chat';
+import { Button } from './components/Button/Button';
+import { ChatStorage } from './storage/chat/Chat.storage';
 
 export const App = observer(() => {
-  const { userStorage, roomStorage } = useContext(Context);
+  const { userStorage, roomStorage, chatStorage } = useContext(Context);
   const [activeJoinPopup, setActiveJoinPopup] = useState<boolean>(false);
   const [activeLeavePopup, setActiveLeavePopup] = useState<boolean>(false);
   const [nickname, setNickname] = useState<string>('');
-
-
 
   /**
    * Управляет событием присоединения к комнате
    */
   useEffect(() => {
- 
-    if (roomStorage.roomJoinData) {
+    const user = roomStorage.getJoinedUser();
 
-      const user = roomStorage.getJoinedUser();
-      setActiveJoinPopup(true);
-      setNickname(user!.nickname);
+    if (!roomStorage.roomJoinData || !user) {
+      return;
     }
+
+
+    setActiveJoinPopup(true);
+    setNickname(user.nickname);
 
     setTimeout(() => {
       setActiveJoinPopup(false);
@@ -39,12 +41,14 @@ export const App = observer(() => {
    */
   useEffect(() => {
 
-    if (roomStorage.roomJoinData) {
+    const user = roomStorage.getLeavedUser();
 
-      const user = roomStorage.getLeavedUser();
-      setActiveLeavePopup(true);
-      setNickname(user!.nickname);
+    if (!roomStorage.roomJoinData || !user) {
+      return;
     }
+
+    setActiveLeavePopup(true);
+    setNickname(user.nickname);
 
     setTimeout(() => {
       setActiveLeavePopup(false);
@@ -53,13 +57,19 @@ export const App = observer(() => {
   }, [roomStorage.roomLeaveData, roomStorage]);
 
 
+
+  // const testHandler = () => {
+  //   console.log(localStorage.getItem('token'));
+  //   console.log(userStorage.userData);
+  // }
+
   return (
     <div className="image">
       <div className="app">
 
         { userStorage.isAuth ?
           <div style={{ position: 'relative', top: '20px', left: '20px' }}>
-
+            {/* <Button appearence='large' onClick={testHandler}>Тестовая кнопка</Button> */}
             <Chat />
 
             <RoomList />
