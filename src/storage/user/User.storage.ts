@@ -1,9 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { randomUUID } from 'crypto';
 import { makeAutoObservable } from 'mobx';
-import { v4 } from 'uuid';
-import api from '../../api/http';
-import { AuthFormData } from '../../components/authentication/AuthFormInterface';
 import { RegistrationFormData } from '../../components/authentication/RegistrationFormInterface';
 import { UserData } from '../../models/User/UserData';
 import { AuthService } from '../../services/AuthService';
