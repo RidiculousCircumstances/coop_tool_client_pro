@@ -1,12 +1,12 @@
 #dev
 FROM node:18-alpine As development
 WORKDIR /var/www
-COPY --chown=node:node ../../package.json  package.json
-COPY --chown=node:node ../../package-lock.json  package-lock.json
+COPY ../../package.json  package.json
+COPY ../../package-lock.json  package-lock.json
 RUN npm ci
 COPY --chown=node:node . .
 CMD ["npm", "start"]
-USER node
+
 
 
 # #production
