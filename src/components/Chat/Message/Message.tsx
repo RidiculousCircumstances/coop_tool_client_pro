@@ -36,11 +36,13 @@ export const Message = observer(({className, data, ...props}: MessageProps): JSX
 				<div className='message__body'>
 					{data.text}
 				</div>
-			</div>
 
-			{data.image && <div className='message__image-container'>
-				<img src={data.image} alt={data.image} className='message__image'/>
-			</div>}
+
+				{data.image && <div className='message__image-container'>
+					<img src={data.image} alt={data.image} className='message__image' />
+				</div>}
+
+			</div>
 
 		</div>
 	)

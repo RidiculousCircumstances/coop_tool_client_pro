@@ -70,16 +70,14 @@
 	}
 
 	&__top-bar {
-		height: 60px;
+		min-height: 60px;
 		margin-bottom: 20px;
-		border-bottom: 1px solid $border-color;
-	}
-
-	&__top-bar {
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		border-bottom: 1px solid $border-color;
 	}
+	
 
 	&__name {
 		@include getFont($size: large, $weight: 800, $color: $gray-color, $height: 24px);
