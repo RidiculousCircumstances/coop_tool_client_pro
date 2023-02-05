@@ -25,4 +25,5 @@ FROM node:18-alpine As production
 COPY --chown=node:node --from=build /var/www/node_modules ./node_modules
 COPY --chown=node:node --from=build /var/www/build ./build
 COPY --chown=node:node --from=build /var/www/package.json  package.json
+COPY --chown=node:node --from=build /var/www/public  ./public
 CMD [ "npm", "start" ]
