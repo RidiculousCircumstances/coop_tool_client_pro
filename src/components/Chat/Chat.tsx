@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import { useContext, useEffect, useRef, useState } from 'react';
+import { v4 } from 'uuid';
 import { Context } from '../..';
 import { MessageData } from '../../models/Message/MessageData';
 import { Input } from '../input/Input';
@@ -11,14 +12,17 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 
 	const { roomStorage, chatStorage } = useContext(Context);
 	const fileRef = useRef<HTMLInputElement>(null);
-	const scrollRef = useRef<HTMLDivElement>(null);
+
 
 	const [messages, setMessages] = useState<MessageData[] | null>(null);
 
 	/**
 	 * Input сообщения
+	 * 
+	 * Пока что на бэке не реализован прием нескольких файлов
 	 */
-	const [file, setFile] = useState<File | null>(null);
+	const [files, setFile] = useState<File[] | null>(null);
+
 	const [text, setText] = useState<string>('');
 
 	const roomName = roomStorage.activeRoom?.name
@@ -70,26 +74,7 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 
 	}, [chatStorage.incomingMessage, chatStorage]);
 
-	/**
-	 * 
-	 * @returns 
-	 * Возвращает лист компонентов сообщений
-	 */
-	const messagesList = (): JSX.Element | JSX.Element[] => {
-		
-		if (messages && messages.length > 0) {
-			return messages.map((message) => {
-				return (<Message key={message.messageId} data={message} />
-				)
-			});
-		} else {
-			return (
-				<div className='chat__empty'>Здесь пока что ничего нет...</div>
-			)
-		}
 
-		
-	}
 
 	const handleFileClick = () => {
 		fileRef?.current?.click();
@@ -101,7 +86,13 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 		if (!fileObj) {
 			return;
 		}
-		setFile(fileObj);
+	
+		setFile((files) => {
+			if (!files) {
+				return [fileObj];
+			}
+			return [...files, fileObj]
+		});
 	}
 
 	const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -118,7 +109,7 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 	const handleSendClick = () => {
 		const chatId = roomStorage.activeRoom?.id;
 
-		if (!chatId || (!text && !file)) {
+		if (!chatId || (!text && !files)) {
 			return;
 		}
 
@@ -127,8 +118,9 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 		formData.append('chatId', chatId);
 		formData.append('text', text);
 
-		if (file) {
-			formData.append('image', file);
+		if (files && files.length > 0) {
+
+			formData.append('image', files[0]);
 		}
 
 		const send = async () => {
@@ -141,6 +133,67 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 		
 	}
 
+
+	/**
+	 * 
+	 * @returns 
+	 * Возвращает лист компонентов сообщений
+	 */
+	const messagesList = (): JSX.Element | JSX.Element[] => {
+
+		if (messages && messages.length > 0) {
+			return messages.map((message) => {
+				return (<Message key={message.messageId} data={message} />
+				)
+			});
+		} else {
+			return (
+				<div className='chat__empty'>Здесь пока что ничего нет...</div>
+			)
+		}
+
+
+	}
+
+	const handleCloseFileButton = (fileTodelete: File) => {
+		const filtredFiles = files?.filter((file) => {
+			return file.name !== fileTodelete.name;
+		});
+
+		setFile((file) => {
+			if (!file) {
+				return null;
+			}
+			if (!filtredFiles) {
+				return null;
+			}
+			if (filtredFiles.length === 0) {
+				return null;
+			}
+			return filtredFiles;
+		});
+	
+	}
+
+	const filePreviews = (): JSX.Element[] | JSX.Element => {
+
+		if (!files) {
+			return (<></>);
+		}
+		return files.map((file) => {
+			const src = URL.createObjectURL(file);
+			return (
+				<div className='chat__preview-wrapper'>
+					<div className='chat__close-bitton-wrapper' onClick={() => handleCloseFileButton(file)}>
+						<div className='chat__close-button' />
+					</div>
+					<div key={v4()} className='chat__preview-image-wrapper'>
+						<img className='chat__preview-image' src={src} alt={file.name}></img>
+					</div>
+				</div>
+			);
+		});		
+	}
 
 	return (
 	<div className='chat'>
@@ -155,7 +208,7 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 			</div>
 		</div>
 
-			<div ref={scrollRef} className='chat__container'>
+		<div className='chat__container'>
 			<ul className='chat__message-list'>
 				<div className='chat_messages'>
 					{(messagesList())}
@@ -165,18 +218,25 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 
 		<div className='chat__bottom-bar'>
 
+			{files  && <div className='chat__preload-container'>
+					{filePreviews()}
+			</div>}
+
+			<div className='chat__send-bar'>
 				<div onClick={handleFileClick} className='chat__append-file-container'>
 					<span className='chat__file-button'></span>
 					<input ref={fileRef} type={'file'} style={{ display: 'none' }}
-							onChange={(e) => handleFileChange(e)}></input>
-			</div>
+						onChange={(e) => handleFileChange(e)}></input>
+				</div>
 
-				<Input className='chat__input' placeholder='Напишите сообщение...' 
-					onChange={(e) => handleTextChange(e)} value={text}/>
+				<Input className='chat__input' placeholder='Напишите сообщение...'
+					onChange={(e) => handleTextChange(e)} value={text} />
 
 				<div className='chat__send-button-container' onClick={handleSendClick}>
-				<span className='chat__send-button'></span>
+					<span className='chat__send-button'></span>
+				</div>
 			</div>
+			
 			
 
 		</div>

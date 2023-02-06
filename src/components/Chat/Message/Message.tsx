@@ -8,7 +8,8 @@ import { observer } from 'mobx-react-lite';
 export const Message = observer(({className, data, ...props}: MessageProps): JSX.Element => {
 
 	const date = new Date(data.created);
-	const time = `${date.getHours()}:${date.getMinutes()} ${date.getDay()}/${date.getMonth()}/${date.getFullYear()}`
+
+	const time = `${date.toLocaleTimeString('ru-RU', { timeZone: 'Asia/Barnaul', timeStyle: 'short' })} ${date.toLocaleDateString('ru-RU')}`
 
 	const { userStorage } = useContext(Context);
 	const senderId = userStorage.userData?.id;
