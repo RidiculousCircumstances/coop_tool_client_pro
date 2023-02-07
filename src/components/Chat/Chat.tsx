@@ -1,9 +1,11 @@
 import { observer } from 'mobx-react-lite';
 import { useContext, useEffect, useRef, useState } from 'react';
+import ReactTextareaAutosize from 'react-textarea-autosize';
 import { v4 } from 'uuid';
 import { Context } from '../..';
 import { MessageData } from '../../models/Message/MessageData';
 import { Input } from '../input/Input';
+import { Textarea } from '../textarea/Textarea';
 import { ChatProps } from './Chat.props';
 import './chat.scss';
 import { Message } from './Message/Message';
@@ -95,9 +97,8 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 		});
 	}
 
-	const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		const textData = e.target.value;
-
 		setText(textData);
 	}
 
@@ -116,7 +117,7 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 		const formData = new FormData();
 
 		formData.append('chatId', chatId);
-		formData.append('text', text);
+		formData.append('text', text!);
 
 		if (files && files.length > 0) {
 
@@ -183,17 +184,19 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 		return files.map((file) => {
 			const src = URL.createObjectURL(file);
 			return (
-				<div className='chat__preview-wrapper'>
+				<div key={file.lastModified} className='chat__preview-wrapper'>
 					<div className='chat__close-bitton-wrapper' onClick={() => handleCloseFileButton(file)}>
 						<div className='chat__close-button' />
 					</div>
-					<div key={v4()} className='chat__preview-image-wrapper'>
+					<div className='chat__preview-image-wrapper'>
 						<img className='chat__preview-image' src={src} alt={file.name}></img>
 					</div>
 				</div>
 			);
 		});		
 	}
+
+
 
 	return (
 	<div className='chat'>
@@ -229,8 +232,11 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 						onChange={(e) => handleFileChange(e)}></input>
 				</div>
 
-				<Input className='chat__input' placeholder='Напишите сообщение...'
-					onChange={(e) => handleTextChange(e)} value={text} />
+				<div className='chat__input' >
+					<Textarea minRows={1} maxRows={5} placeholder='Напишите сообщение...'
+						onChange={handleTextChange} value={text} />
+				</div>
+				
 
 				<div className='chat__send-button-container' onClick={handleSendClick}>
 					<span className='chat__send-button'></span>

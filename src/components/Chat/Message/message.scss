@@ -20,6 +20,7 @@
 	}
 
 	&__body {
+		word-break: break-word;
 		@include getFont($size: medium, $weight: 500, $color: $gray-color, $height: 24px);
 	}
 
