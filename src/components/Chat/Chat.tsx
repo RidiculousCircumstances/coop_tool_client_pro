@@ -120,8 +120,9 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 		formData.append('text', text!);
 
 		if (files && files.length > 0) {
-
-			formData.append('image', files[0]);
+			files.forEach((file) => {
+				formData.append('image', file);
+			});
 		}
 
 		const send = async () => {
