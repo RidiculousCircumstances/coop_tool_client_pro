@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Context } from '.';
 import { Authentication } from './components/authentication/Authentication';
 import { RoomList } from './components/RoomList/RoomList';
-import { NotifyPopup } from './components/Popup/NotifyPopup';
+import { NotifyPopup } from './components/NotifyPopup/NotifyPopup';
 import './styles/app.scss';
 import { Chat } from './components/Chat/Chat';
 import { Button } from './components/Button/Button';
@@ -68,7 +68,7 @@ export const App = observer(() => {
       <div className="app">
 
         { userStorage.isAuth ?
-          <div style={{ position: 'relative', top: '20px', left: '20px' }}>
+          <div style={{ position: 'relative', paddingTop: '20px', paddingLeft: '200px' }}>
             {/* <Button appearence='large' onClick={testHandler}>Тестовая кнопка</Button> */}
             <Chat />
 

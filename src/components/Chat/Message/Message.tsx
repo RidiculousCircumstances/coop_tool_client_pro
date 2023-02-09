@@ -4,7 +4,7 @@ import cn from 'classnames';
 import { CSSProperties, useContext } from 'react';
 import { Context } from '../../..';
 import { observer } from 'mobx-react-lite';
-import { Style } from 'util';
+import { Images } from '../Image/Image';
 
 export const Message = observer(({className, data, ...props}: MessageProps): JSX.Element => {
 
@@ -78,16 +78,7 @@ export const Message = observer(({className, data, ...props}: MessageProps): JSX
 
 
 				{data.images && 
-					<div className={cn('message__image-container'
-						)}>
-						{data.images.length === 1 && 
-							<img src={data.images[0]} alt={data.images[0]} className='message__image' />
-						}
-						{
-						data.images.length > 1 &&
-							images(data.images)
-						}
-					</div>
+					<Images paths={data.images} />
 				}
 
 			</div>

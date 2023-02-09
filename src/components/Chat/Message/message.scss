@@ -29,26 +29,6 @@
 		align-items: center;
 		gap: 10px;
 		margin-bottom: 5px;
-
 	}
-
-	&__image {
-		width: 442px;
-		height: 248px;
-		border: 5px solid $border-color-opacity;
-		object-fit: cover;
-	}
-	&__image-container {
-		margin-top: 10px;
-	}
-
-
-	&__image-item {
-		width: 442px;
-		height: 248px;
-		object-fit: cover;
-		border: 5px solid $border-color-opacity;
-	}
-
 	
 }

@@ -16,7 +16,7 @@
 	&__room {
 		display: flex;
 		width: 100%;
-
+		align-items: center;
 		color: $gray-color;
 		min-height: 60px;
 		line-height: 2;
@@ -33,15 +33,17 @@
 
 	&__action-dots {
 		margin-left: auto;
-		padding-right: 10px;
+		padding-right: 15px;
 		opacity: 0;
 		pointer-events: none;
-
-
+		font-size: xx-large;
+		position: relative;
+		bottom: 10px;
 		&--active {
 			opacity: 1;
 			cursor: pointer;
 			pointer-events: all;
+			text-align: start;
 		}
 	}
 
@@ -50,7 +52,7 @@
 		display: block;
 		padding-top: 20px;
 		padding-left: 10px;
-		left: 19px;
+		left: 35px;
 		width: 200px;
 		height: 120px;
 		border-radius: 0 16px 16px 0;
@@ -74,4 +76,11 @@
 
 	}
 
+
+	&__empty {
+		position: absolute;
+		top: 50%;
+		left: 20%;
+		@include getFont($size: large, $weight: 500, $color: $gray-color, $height: 24px);
+	}
 }

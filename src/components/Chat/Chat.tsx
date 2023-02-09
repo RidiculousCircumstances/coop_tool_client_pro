@@ -1,10 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import { useContext, useEffect, useRef, useState } from 'react';
-import ReactTextareaAutosize from 'react-textarea-autosize';
-import { v4 } from 'uuid';
 import { Context } from '../..';
 import { MessageData } from '../../models/Message/MessageData';
-import { Input } from '../input/Input';
 import { Textarea } from '../textarea/Textarea';
 import { ChatProps } from './Chat.props';
 import './chat.scss';
@@ -196,7 +193,6 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 			);
 		});		
 	}
-
 
 
 	return (
