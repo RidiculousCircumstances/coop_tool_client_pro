@@ -12,6 +12,7 @@ export class ChatStorage {
 	
 	gateway: Gateway = Gateway.getInstance();
 
+	private taggedMessage: MessageData | null = null;
 
 
 	set messages(messages: MessageData[] | null) {
@@ -32,6 +33,12 @@ export class ChatStorage {
 
 	constructor () {
 		makeAutoObservable(this);
+	}
+
+	getMessageById (messageId: number) {
+		return this.messages?.filter((message) => {
+			return messageId === message.messageId;
+		});
 	}
 
 	async getMessages (chatId: string) {

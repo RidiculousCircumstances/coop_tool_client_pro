@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { Context } from '../..';
+import { CONST } from '../../Const';
 import { MessageData } from '../../models/Message/MessageData';
 import { Textarea } from '../textarea/Textarea';
 import { ChatProps } from './Chat.props';
@@ -14,6 +15,7 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 
 
 	const [messages, setMessages] = useState<MessageData[] | null>(null);
+	const [taggedOnReplyMsg, setTaggedOnReplyMsg] = useState<MessageData & {cutText: string | null} | null>(null);
 
 	/**
 	 * Input сообщения
@@ -73,25 +75,68 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 
 	}, [chatStorage.incomingMessage, chatStorage]);
 
-
+	/**
+	 * Фейковый клик по скрытому файловому инпуту
+	 */
 
 	const handleFileClick = () => {
 		fileRef?.current?.click();
 	}
 
-	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-
-		const fileObj = e.target.files && e.target.files[0];
+	/**
+	 * 
+	 * @param fileObj 
+	 * @returns 
+	 * Обработка установления состояния файлового инпута
+	 */
+	const takeInputFile = (fileObj: File | null) => {
 		if (!fileObj) {
 			return;
 		}
-	
+
+		console.log();
+
+		if (!CONST.ALLOWED_FILES.includes(fileObj.type)) {
+			return;
+		}
+
 		setFile((files) => {
 			if (!files) {
 				return [fileObj];
 			}
 			return [...files, fileObj]
 		});
+	}
+
+	/**
+	 * 
+	 * @param e 
+	 * @returns 
+	 * Вставить файл из буфера обмена
+	 */
+	const handleFilePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+
+		if (e.type !== 'paste') {
+			return;
+		}
+
+		const data = e.clipboardData.files[0];
+		if (!data) {
+			return;
+		}
+		takeInputFile(data);
+
+	}
+
+	/**
+	 * 
+	 * @param e 
+	 * @returns 
+	 * Вставить файл по клику на кнопку
+	 */
+	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const fileObj = e.target.files && e.target.files[0];
+		takeInputFile(fileObj);
 	}
 
 	const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -102,9 +147,9 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 	/**
 	 * 
 	 * @returns 
-	 * Обработка события отправки сообщения
+	 * Физическая обработка отправки сообщения
 	 */
-	const handleSendClick = () => {
+	const sendMessage = () => {
 		const chatId = roomStorage.activeRoom?.id;
 
 		if (!chatId || (!text && !files)) {
@@ -129,31 +174,34 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 
 		setText('');
 		setFile(null);
-		
 	}
-
 
 	/**
 	 * 
 	 * @returns 
-	 * Возвращает лист компонентов сообщений
+	 * Обработка события клика на иконку отправки сообщения
 	 */
-	const messagesList = (): JSX.Element | JSX.Element[] => {
-
-		if (messages && messages.length > 0) {
-			return messages.map((message) => {
-				return (<Message key={message.messageId} data={message} />
-				)
-			});
-		} else {
-			return (
-				<div className='chat__empty'>Здесь пока что ничего нет...</div>
-			)
-		}
-
-
+	const handleSendClick = () => {
+		sendMessage();
 	}
 
+	/**
+	 * 
+	 * @param e 
+	 * Отправка сообщения по комбинации клавиш
+	 */
+	const handleKeyDownSend = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+
+		if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+			sendMessage();
+		}
+	}
+
+	/**
+	 * 
+	 * @param fileTodelete 
+	 * Удалить файл из инпута
+	 */
 	const handleCloseFileButton = (fileTodelete: File) => {
 		const filtredFiles = files?.filter((file) => {
 			return file.name !== fileTodelete.name;
@@ -171,7 +219,47 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 			}
 			return filtredFiles;
 		});
-	
+
+	}
+
+	const handleTaggedOnReplyMsg = (messageId: number) => {
+		const result = chatStorage.getMessageById(messageId);
+		if (!result) {
+			return;
+		}
+		const maxLength = CONST.TAGGED_MESSAGE_LENGTH;
+		const taggedMessage = result[0];
+
+		if (taggedMessage.text.length > maxLength){
+			const cutText = taggedMessage.text.slice(0, maxLength) + '...';
+			setTaggedOnReplyMsg({ ...taggedMessage, cutText });
+		} else {
+			setTaggedOnReplyMsg({ ...taggedMessage, cutText: null });
+		}
+
+	}
+
+	/**
+	 * 
+	 * @returns 
+	 * Возвращает лист компонентов сообщений
+	 */
+	const messagesList = (): JSX.Element | JSX.Element[] => {
+
+
+		if (messages && messages.length > 0) {
+			return messages.map((message) => {
+				return (<Message key={message.messageId} data={message} replyHandler={handleTaggedOnReplyMsg}
+					 />
+				)
+			});
+		} else {
+			return (
+				<div className='chat__empty'>Здесь пока что ничего нет...</div>
+			)
+		}
+
+
 	}
 
 	const filePreviews = (): JSX.Element[] | JSX.Element => {
@@ -183,7 +271,7 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 			const src = URL.createObjectURL(file);
 			return (
 				<div key={file.lastModified} className='chat__preview-wrapper'>
-					<div className='chat__close-bitton-wrapper' onClick={() => handleCloseFileButton(file)}>
+					<div className='chat__close-button-wrapper' onClick={() => handleCloseFileButton(file)}>
 						<div className='chat__close-button' />
 					</div>
 					<div className='chat__preview-image-wrapper'>
@@ -193,7 +281,6 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 			);
 		});		
 	}
-
 
 	return (
 	<div className='chat'>
@@ -218,9 +305,24 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 
 		<div className='chat__bottom-bar'>
 
-			{files  && <div className='chat__preload-container'>
+			{files && 
+			<div className='chat__preload-container'>
 					{filePreviews()}
 			</div>}
+
+			{taggedOnReplyMsg &&
+
+			<div className='chat__tagged-message-container'>
+				<div className="chat__border"/>
+				<div className='chat__close-button chat__tagged-message-close-button icon' 
+					 onClick={() => setTaggedOnReplyMsg(null)} />
+				<div className='chat__tagged-message-sender'>{taggedOnReplyMsg.nickname}</div>
+					<div className='chat__tagged-message-cut-text'>
+						{taggedOnReplyMsg.cutText ?? taggedOnReplyMsg.text}
+					</div>
+			</div>
+			}
+
 
 			<div className='chat__send-bar'>
 				<div onClick={handleFileClick} className='chat__append-file-container'>
@@ -230,8 +332,11 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 				</div>
 
 				<div className='chat__input' >
-					<Textarea minRows={1} maxRows={5} placeholder='Напишите сообщение...'
-						onChange={handleTextChange} value={text} />
+						<Textarea onKeyDown={handleKeyDownSend} minRows={1} 
+						maxRows={5} placeholder='Напишите сообщение...'
+						onChange={handleTextChange} 
+						onPaste={handleFilePaste}
+						value={text} />
 				</div>
 				
 
@@ -240,8 +345,6 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 				</div>
 			</div>
 			
-			
-
 		</div>
 	</div>);
 })

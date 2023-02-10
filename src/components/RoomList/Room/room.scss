@@ -62,10 +62,10 @@
 	&__modals-action {
 
 		
-		@include getFont($size: small, $weight: 400, $color: $gray-color, $height: 5px);
+		@include getFont($size: small, $weight: 400, $color: $gray-color, $height: 24px);
 
 		&:hover {
-			@include getFont($size: small, $weight: 400, $color: $green-color, $height: 5px);
+			@include getFont($size: small, $weight: 400, $color: $green-color, $height: 24px);
 		}
 
 	}

@@ -5,7 +5,7 @@ import { TextareaProps } from './textarea.props';
 
 export const Textarea = 
 	(
-		{ maxRows, minRows, placeholder, onChange, value, ...props }: TextareaProps,
+		{ maxRows, minRows, placeholder, onChange, value, onKeyDown, onPaste, ...props }: TextareaProps,
 	): JSX.Element => {
 
 		
@@ -21,6 +21,8 @@ export const Textarea =
 				color: '#8b8686'
 
 			}} className={cn('textarea')} maxRows={maxRows} minRows={minRows} placeholder={placeholder}
-				onChange={(e) => onChange(e)} value={value} />
+				onChange={(e) => onChange(e)} value={value} onKeyDown={(e) => onKeyDown ? onKeyDown(e) : ''}
+				onPaste={(e) => onPaste ? onPaste(e) : ''}
+				/>
 		);
 	}

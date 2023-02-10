@@ -13,5 +13,7 @@ export const CONST = {
 	DROPTOP_JOIN_BUTTON: 'Присоединиться',
 
 	COPY_TEXT: 'Копировать id комнаты',
-	JOIN: 'Войти'
+	JOIN: 'Войти',
+	ALLOWED_FILES: ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'],
+	TAGGED_MESSAGE_LENGTH: 42,
 }
