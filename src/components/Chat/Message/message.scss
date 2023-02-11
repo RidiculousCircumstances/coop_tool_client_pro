@@ -3,7 +3,6 @@
 
 .message {
 	display: flex;
-	margin-top: 30px;
 	padding: 0 50px;
 	flex-wrap: wrap;
 	flex-direction: column;
@@ -48,6 +47,10 @@
 			pointer-events: all;
 			transition: all .5;
 		}
+	}
+
+	&__tagged-msg{
+		left: -50px;
 	}
 	
 }

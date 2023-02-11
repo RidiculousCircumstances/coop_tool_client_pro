@@ -7,6 +7,7 @@ import { Textarea } from '../textarea/Textarea';
 import { ChatProps } from './Chat.props';
 import './chat.scss';
 import { Message } from './Message/Message';
+import { ReferencedMessage } from './ReferencedMessage/ReferencedMessage';
 
 export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => {
 
@@ -15,7 +16,7 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 
 
 	const [messages, setMessages] = useState<MessageData[] | null>(null);
-	const [taggedOnReplyMsg, setTaggedOnReplyMsg] = useState<MessageData & {cutText: string | null} | null>(null);
+	const [taggedOnReplyMsg, setTaggedOnReplyMsg] = useState<MessageData | null>(null);
 
 	/**
 	 * Input сообщения
@@ -167,6 +168,11 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 			});
 		}
 
+		if (taggedOnReplyMsg) {
+			const id = taggedOnReplyMsg.messageId;
+			formData.append('referencedMessage', id.toString());
+		}
+
 		const send = async () => {
 			await chatStorage.sendMessage(formData);
 		}
@@ -174,6 +180,7 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 
 		setText('');
 		setFile(null);
+		setTaggedOnReplyMsg(null);
 	}
 
 	/**
@@ -222,21 +229,20 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 
 	}
 
+	/**
+	 * 
+	 * @param messageId 
+	 * @returns 
+	 * Обработка отображения тегнутого сообщения при отправке
+	 */
 	const handleTaggedOnReplyMsg = (messageId: number) => {
 		const result = chatStorage.getMessageById(messageId);
 		if (!result) {
 			return;
 		}
-		const maxLength = CONST.TAGGED_MESSAGE_LENGTH;
+
 		const taggedMessage = result[0];
-
-		if (taggedMessage.text.length > maxLength){
-			const cutText = taggedMessage.text.slice(0, maxLength) + '...';
-			setTaggedOnReplyMsg({ ...taggedMessage, cutText });
-		} else {
-			setTaggedOnReplyMsg({ ...taggedMessage, cutText: null });
-		}
-
+		setTaggedOnReplyMsg(taggedMessage);
 	}
 
 	/**
@@ -310,17 +316,13 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 					{filePreviews()}
 			</div>}
 
+
 			{taggedOnReplyMsg &&
 
-			<div className='chat__tagged-message-container'>
-				<div className="chat__border"/>
-				<div className='chat__close-button chat__tagged-message-close-button icon' 
-					 onClick={() => setTaggedOnReplyMsg(null)} />
-				<div className='chat__tagged-message-sender'>{taggedOnReplyMsg.nickname}</div>
-					<div className='chat__tagged-message-cut-text'>
-						{taggedOnReplyMsg.cutText ?? taggedOnReplyMsg.text}
-					</div>
-			</div>
+			/**
+			 * Тегнутое сообщение при отправке
+			 */
+			<ReferencedMessage type='send' refId={taggedOnReplyMsg.messageId} setActive={setTaggedOnReplyMsg}/>
 			}
 
 

@@ -8,7 +8,7 @@
 	top: 0;
 	left: 50%;
 	display: block;
-	height: 850px;
+	height: 86vh;
 
 
 	&__room-button {
@@ -76,7 +76,7 @@
 		text-align: center;
 		padding-top: 10px;
 
-		@include getFont($size: large, $weight: 400, $color: $gray-color, $height: 5px);
+		@include getFont($size: large, $weight: 400, $color: $gray-color, $height: 24px);
 	}
 
 	&__droptop-chats-button {
