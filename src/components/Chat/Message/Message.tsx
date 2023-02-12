@@ -1,7 +1,7 @@
 import { MessageProps } from './Message.props';
 import './message.scss';
 import cn from 'classnames';
-import { useContext, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { Context } from '../../..';
 import { observer } from 'mobx-react-lite';
 import { Images } from '../Image/Image';
@@ -18,8 +18,12 @@ export const Message = observer(({className, data, replyHandler, ...props}: Mess
 	${date.toLocaleDateString('ru-RU')}`
 
 	const { userStorage, chatStorage } = useContext(Context);
+	const msgRef = useRef<HTMLDivElement>(null);
+	const message = chatStorage.getMessageById(data.messageId);
+	message![0].ref = msgRef;
+	
 	const senderId = userStorage.userData?.id;
-
+	
 
 	const [isActiveReply, setActiveReply] = useState<boolean>(false)
 
@@ -30,7 +34,7 @@ export const Message = observer(({className, data, replyHandler, ...props}: Mess
 	}
 
 	return (
-		<div onMouseEnter={() => setActiveReply(true)}
+		<div ref={msgRef} onMouseEnter={() => setActiveReply(true)}
 			onMouseLeave={() => setActiveReply(false)}
 			className={cn(className, 'message')}   {...props}>
 
@@ -67,7 +71,6 @@ export const Message = observer(({className, data, replyHandler, ...props}: Mess
 				}
 
 			</div>
-
 		</div>
 	)
 })

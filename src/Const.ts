@@ -15,5 +15,5 @@ export const CONST = {
 	COPY_TEXT: 'Копировать id комнаты',
 	JOIN: 'Войти',
 	ALLOWED_FILES: ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'],
-	TAGGED_MESSAGE_LENGTH: 42,
+	TAGGED_MESSAGE_LENGTH: 20,
 }

@@ -12,11 +12,32 @@ export const Images = observer(({className, paths, ...props}: ImagesProps): JSX.
 	const [isActiveImgPopup, setActiveImgPopup] = useState<boolean>(false);
 	const [activeImage, setActiveImage] = useState<string | null>(null);
 
-	const size = (count: number): CSSProperties => {
-		let height = imgCount === 2 ? (248 / 2) : (248 / (imgCount - 1));
+	const size = (count: number, index: number): CSSProperties => {
+		let height = null;
+		let width = null;
+
+		
+		if (index === 0 && imgCount !== 2) {
+			if (window.screen.width <= 1360) {
+				width = 280;
+				height = 158;
+			} else {
+				width = 410;
+				height = 230;
+			}
+		} else {
+			if (window.screen.width <= 1360) {
+				height = imgCount === 2 ? (158 / 2) : (158 / (imgCount - 1));
+				width = 280 / (count - 1);
+			} else {
+				height = imgCount === 2 ? (230 / 2) : (230 / (imgCount - 1));
+				width = 410 / (count - 1);
+			}
+		}
+
 
 		return {
-			width: (442 / (count - 1)),
+			width,
 			height
 		}
 	}
@@ -37,16 +58,10 @@ export const Images = observer(({className, paths, ...props}: ImagesProps): JSX.
 
 	const images = (): JSX.Element[] => paths.map((image, index) => {
 			
-			let firstImgSize: CSSProperties | null = null;
-			if (index === 0 && imgCount > 2) {
-				firstImgSize = {
-					width: '100%',
-					height: '100%'
-				}
-			}
+			
 			
 			return (
-				<img style={index === 0 && firstImgSize ? firstImgSize : size(imgCount)}
+				<img style={size(imgCount, index)}
 				 key={image} src={image} alt={image} className={cn('images__image-item', 
 					 { 'images__image-item--half': imgCount === 2 },
 					 { 'images__image-item--rest': imgCount > 2 }

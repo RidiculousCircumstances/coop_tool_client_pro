@@ -14,11 +14,17 @@
 
 
 	&__image-item {
-		width: 442px;
-		height: 248px;
+		width: 410px;
+		height: 230px;
 		object-fit: cover;
 		border: 5px solid $border-color-opacity;
 		cursor: pointer;
+
+
+		@media (max-width: 1360px) {
+			width: 280px;
+			height: 158px;
+		}
 	}
 
 	&__full-image{

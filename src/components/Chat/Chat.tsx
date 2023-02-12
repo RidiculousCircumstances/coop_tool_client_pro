@@ -13,22 +13,17 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 
 	const { roomStorage, chatStorage } = useContext(Context);
 	const fileRef = useRef<HTMLInputElement>(null);
-
+	const chatContainerRef = useRef<HTMLDivElement>(null);
 
 	const [messages, setMessages] = useState<MessageData[] | null>(null);
 	const [taggedOnReplyMsg, setTaggedOnReplyMsg] = useState<MessageData | null>(null);
-
-	/**
-	 * Input сообщения
-	 * 
-	 * Пока что на бэке не реализован прием нескольких файлов
-	 */
 	const [files, setFile] = useState<File[] | null>(null);
-
 	const [text, setText] = useState<string>('');
+
 
 	const roomName = roomStorage.activeRoom?.name
 
+	chatStorage.chatContainerRef = chatContainerRef;
 
 	useEffect(() => {
 
@@ -95,8 +90,6 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 			return;
 		}
 
-		console.log();
-
 		if (!CONST.ALLOWED_FILES.includes(fileObj.type)) {
 			return;
 		}
@@ -152,8 +145,8 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 	 */
 	const sendMessage = () => {
 		const chatId = roomStorage.activeRoom?.id;
-
-		if (!chatId || (!text && !files)) {
+		const chatContainer = chatStorage.chatContainerRef?.current;
+		if (!chatId || (!text && !files) || !chatContainer) {
 			return;
 		}
 
@@ -181,6 +174,7 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 		setText('');
 		setFile(null);
 		setTaggedOnReplyMsg(null);
+		chatContainer.scroll({ top: 0 })
 	}
 
 	/**
@@ -252,9 +246,9 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 	 */
 	const messagesList = (): JSX.Element | JSX.Element[] => {
 
-
 		if (messages && messages.length > 0) {
 			return messages.map((message) => {
+
 				return (<Message key={message.messageId} data={message} replyHandler={handleTaggedOnReplyMsg}
 					 />
 				)
@@ -270,7 +264,7 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 
 	const filePreviews = (): JSX.Element[] | JSX.Element => {
 
-		if (!files) {
+		if (!files || files.length > 6) {
 			return (<></>);
 		}
 		return files.map((file) => {
@@ -293,15 +287,11 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 
 		<div className='chat__top-bar'>
 			<div className='chat__name'>
-					{roomName ?? 'Выберите комнату' }
-			</div>
-
-			<div className='chat__actions'>
-
-			</div>
+				{roomName ?? 'Выберите комнату' }
+			</div>	
 		</div>
 
-		<div className='chat__container'>
+		<div ref={chatContainerRef} className='chat__container'>
 			<ul className='chat__message-list'>
 				<div className='chat_messages'>
 					{(messagesList())}
@@ -316,7 +306,6 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 					{filePreviews()}
 			</div>}
 
-
 			{taggedOnReplyMsg &&
 
 			/**
@@ -325,7 +314,6 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 			<ReferencedMessage type='send' refId={taggedOnReplyMsg.messageId} setActive={setTaggedOnReplyMsg}/>
 			}
 
-
 			<div className='chat__send-bar'>
 				<div onClick={handleFileClick} className='chat__append-file-container'>
 					<span className='chat__file-button'></span>
@@ -333,7 +321,7 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 						onChange={(e) => handleFileChange(e)}></input>
 				</div>
 
-				<div className='chat__input' >
+				<div className='chat__input'>
 						<Textarea onKeyDown={handleKeyDownSend} minRows={1} 
 						maxRows={5} placeholder='Напишите сообщение...'
 						onChange={handleTextChange} 
@@ -341,7 +329,6 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 						value={text} />
 				</div>
 				
-
 				<div className='chat__send-button-container' onClick={handleSendClick}>
 					<span className='chat__send-button'></span>
 				</div>

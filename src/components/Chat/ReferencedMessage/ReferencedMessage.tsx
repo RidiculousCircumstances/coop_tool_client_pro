@@ -20,11 +20,36 @@ export const ReferencedMessage = observer(({ className, refId, type,
 	if (referencedMessage && referencedMessage.text.length > maxLength) {
 		cutText = referencedMessage?.text.slice(0, maxLength) + '...';
 	}
-	
 
+	/**
+	 * 
+	 * @returns 
+	 * Скроллит на высоту тегнутого сообщения
+	 */
+	const handleGoToRefMsg = () => {
+		const taggedRef = referencedMessage?.ref;
+		const refMessage = taggedRef?.current;
+		const container = chatStorage.chatContainerRef?.current;
+		if (!taggedRef || type !== 'read' || !refMessage || !container) {
+			return;
+		}
+
+		// container.scroll({ top: (refMessage.offsetTop - 80) });
+		container.scroll({ top: (refMessage.offsetTop - 80)});
+		const classList = refMessage.classList;
+		classList.add('chat__tagged');
+		setTimeout(() => {
+			classList.remove('chat__tagged');
+		}, 4000);
+	}
+	
+	const refImg = referencedMessage?.images?.length ? true : false;
 	return (
 
-		<div className={cn(className,'chat__tagged-message-container')} {...props}>
+		<div className={cn(className, 'chat__tagged-message-container', 
+		{'chat__tagged-message-container--read': type === 'read'})}
+			onClick={handleGoToRefMsg}
+			 {...props}>
 			{referencedMessage &&
 			<>
 				{type === 'send' && setActive && 
@@ -35,6 +60,11 @@ export const ReferencedMessage = observer(({ className, refId, type,
 				<div className='chat__tagged-message-cut-text'>
 						{cutText ?? referencedMessage.text}
 				</div>
+				{refImg &&
+				<div className='chat__image-title'>
+					Изображение
+				</div>
+				}
 			</>
 			}
 		</div>

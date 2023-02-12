@@ -7,6 +7,10 @@
 	flex-wrap: wrap;
 	flex-direction: column;
 
+	@media(max-width: 1360px) {
+		padding: 0 35px;
+	} 
+
 	&__user-name {
 		@include getFont($size: medium, $weight: 600, $color: $blue-color, $height: 24px);
 
@@ -39,13 +43,13 @@
 		top: 22px;
 		right: -15px;
 		opacity: 0;
-		transition: all .5;
+		transition: all .5s;
 		cursor: pointer;
 		pointer-events: none;
 		&--active {
 			opacity: 1;
 			pointer-events: all;
-			transition: all .5;
+			transition: all .5s;
 		}
 	}
 

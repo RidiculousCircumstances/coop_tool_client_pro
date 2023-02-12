@@ -7,4 +7,5 @@ export interface MessageData {
 	referencedMessage: number | null;
 	nickname: string;
 	created: string;
+	ref?: React.RefObject<HTMLDivElement>;
 }
