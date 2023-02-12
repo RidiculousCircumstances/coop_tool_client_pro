@@ -1,0 +1,56 @@
+@import '../../../styles/mixins.scss';
+@import '../../../styles/variables.scss';
+
+.images {
+	display: flex;
+	margin-top: 30px;
+	padding: 0 50px;
+	flex-wrap: wrap;
+
+
+	&__image-container {
+		margin-top: 10px;
+	}
+
+
+	&__image-item {
+		width: 410px;
+		height: 230px;
+		object-fit: cover;
+		border: 5px solid $border-color-opacity;
+		cursor: pointer;
+
+
+		@media (max-width: 1360px) {
+			width: 280px;
+			height: 158px;
+		}
+	}
+
+	&__full-image{
+		
+		img {
+			max-width: 100vh;
+			max-height: 100vh;
+			object-fit: cover;
+		}
+	}
+
+	&__close-button{
+		content: url('../close.svg');
+		transform: scale(1);
+		display: block;
+		position: relative;
+		margin-left: auto;
+		left: 20px;
+		right: 0;
+		top: 15px;
+		opacity: 0.6;
+		cursor: pointer;
+		&::hover {
+			opacity: 1;
+			
+		}
+	}
+
+}

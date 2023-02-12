@@ -12,6 +12,18 @@ export class ChatStorage {
 	
 	gateway: Gateway = Gateway.getInstance();
 
+	private _chatContainerRef: React.RefObject<HTMLDivElement> | null = null;
+
+	private taggedMessage: MessageData | null = null;
+
+
+	set chatContainerRef(ref: React.RefObject<HTMLDivElement> | null) {
+		this._chatContainerRef = ref;
+	}
+
+	get chatContainerRef() {
+		return this._chatContainerRef!;
+	}
 
 
 	set messages(messages: MessageData[] | null) {
@@ -32,6 +44,12 @@ export class ChatStorage {
 
 	constructor () {
 		makeAutoObservable(this);
+	}
+
+	getMessageById (messageId: number) {
+		return this.messages?.filter((message) => {
+			return messageId === message.messageId;
+		});
 	}
 
 	async getMessages (chatId: string) {

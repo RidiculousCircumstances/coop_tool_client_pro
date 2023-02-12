@@ -96,7 +96,7 @@ export const RoomList = observer(({...props}: RoomListProps): JSX.Element => {
 
 			});
 		} else {
-			return (<div>Добавьте комнату</div>)
+			return (<div className='room__empty'>Добавьте комнату</div>)
 		}
 
 		

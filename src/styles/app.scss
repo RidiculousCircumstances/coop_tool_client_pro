@@ -8,14 +8,10 @@
 	font-family: "Noto Sans", sans-serif;
 
 	
-
 	scrollbar-width: none;
-	
-
 
 	*::-webkit-scrollbar {
-		width: 6px;
-
+		width: 0;
 	}
 
 	*::-webkit-scrollbar-button {
@@ -47,6 +43,7 @@
 
 .image {
 	background-image: url('./cat.webp');
+	object-fit: cover;
 }
 
 .app {
@@ -56,5 +53,14 @@
 
 	@include getMainColorTransparent();
 
+
+}
+
+.icon {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 20px;
+	height: 20px;
 }
 

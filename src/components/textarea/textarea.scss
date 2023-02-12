@@ -1,0 +1,14 @@
+.textarea {
+	width: 400px;
+	resize: none;
+	background: none;
+	border-radius: 8px;
+	outline: none;
+	border: 1px solid #5c365e;
+	padding: 6px 10px;
+	color: #8b8686;
+
+	@media(max-width: 1360px) {
+		width: 270px;
+	}
+}

@@ -3,8 +3,9 @@ export interface MessageData {
 	userId: number;
 	chatId: string;
 	text: string;
-	image: string | null;
+	images: string[] | null;
 	referencedMessage: number | null;
 	nickname: string;
 	created: string;
+	ref?: React.RefObject<HTMLDivElement>;
 }
