@@ -8,6 +8,7 @@ import { ChatProps } from './Chat.props';
 import './chat.scss';
 import { Message } from './Message/Message';
 import { ReferencedMessage } from './ReferencedMessage/ReferencedMessage';
+import cn from 'classnames';
 
 export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => {
 
@@ -20,6 +21,7 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 	const [files, setFile] = useState<File[] | null>(null);
 	const [text, setText] = useState<string>('');
 
+	const [showBackTo, setShowBackTo] = useState<boolean>(true);
 
 	const roomName = roomStorage.activeRoom?.name
 
@@ -71,16 +73,42 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 
 	}, [chatStorage.incomingMessage, chatStorage]);
 
+
+	
+	/**
+	 * Прослушка скролла для кнопки возврата к началу.
+	 */
+	useEffect(() => {
+		const container = chatStorage.chatContainerRef?.current;
+		const listenToScroll = () => {
+			const container = chatStorage.chatContainerRef?.current;
+			if (!container) {
+				return;
+			}
+			let heightToHideFrom = -150;
+			const winScroll = container.scrollTop;
+			if (winScroll < heightToHideFrom) {
+				showBackTo && setShowBackTo(false);
+			} else {
+				setShowBackTo(true);
+			}
+		};
+		if (!container) {
+			return;
+		}
+		container && container.addEventListener("scroll", listenToScroll);
+		return () =>
+			container.removeEventListener("scroll", listenToScroll); 
+	});
+
 	/**
 	 * Фейковый клик по скрытому файловому инпуту
 	 */
-
 	const handleFileClick = () => {
 		fileRef?.current?.click();
 	}
 
 	/**
-	 * 
 	 * @param fileObj 
 	 * @returns 
 	 * Обработка установления состояния файлового инпута
@@ -224,6 +252,18 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 	}
 
 	/**
+	 * @returns 
+	 * Перейти к началу
+	 */
+	const handleBackToZero = () => {
+		const container = chatStorage.chatContainerRef?.current;
+		if (!container) {
+			return;
+		}
+		container.scroll({ top: -1 });
+	}
+
+	/**
 	 * 
 	 * @param messageId 
 	 * @returns 
@@ -284,13 +324,15 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 
 	return (
 	<div className='chat'>
-
 		<div className='chat__top-bar'>
 			<div className='chat__name'>
 				{roomName ?? 'Выберите комнату' }
-			</div>	
+			</div>
+				<div className='chat__action-dots'>...</div>
 		</div>
 
+
+		
 		<div ref={chatContainerRef} className='chat__container'>
 			<ul className='chat__message-list'>
 				<div className='chat_messages'>
@@ -299,15 +341,17 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 			</ul>
 		</div>
 
-		<div className='chat__bottom-bar'>
 
+		<div className={cn('chat__back-to-icon-wrapper')} onClick={handleBackToZero} hidden={showBackTo}>
+			<div className='icon chat__back-to-icon'></div>
+		</div>
+		<div className='chat__bottom-bar'>
 			{files && 
 			<div className='chat__preload-container'>
 					{filePreviews()}
 			</div>}
 
 			{taggedOnReplyMsg &&
-
 			/**
 			 * Тегнутое сообщение при отправке
 			 */

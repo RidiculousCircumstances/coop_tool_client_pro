@@ -71,6 +71,10 @@
 	
 
 	&__name {
+		margin: auto;
+		position: relative;
+		left: 10px;
+		cursor: pointer;
 		@include getFont($size: large, $weight: 800, $color: $gray-color, $height: 24px);
 	}
 
@@ -93,6 +97,7 @@
 
 	&__container {
 		display: flex;
+		position: relative;
 		flex-direction: column-reverse;
 		margin-top: auto;
 		margin-bottom: 20px;
@@ -218,5 +223,42 @@
 
 	&__tagged {
 		@include getMainColorHover();
+	}
+
+	&__back-to-icon {
+		content: url('./backToZero.svg');
+		cursor: pointer;
+		width: 40px;
+		height: 40px;
+		opacity: 0.2;
+		background-color: $gray-color;
+		border-radius: 50%;
+		&:hover {
+				opacity: 0.4;
+				transition: .3s;
+			}
+	}
+
+	&__back-to-icon-wrapper{
+		position: relative;
+		height: 0;
+		bottom: 0;
+		bottom: 60px;
+		margin-left: auto;
+		right: 20px;
+	}
+
+	&__action-dots {
+		cursor: pointer;
+		font-size: xx-large;
+		position: relative;
+		color: $gray-color;
+		right: 15px;
+		align-self: flex-end;
+		display: flex;
+		text-align: center;
+		justify-content: center;
+		align-items: center;
+		bottom: 12px;
 	}
 }

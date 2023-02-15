@@ -34,7 +34,6 @@ export const ReferencedMessage = observer(({ className, refId, type,
 			return;
 		}
 
-		// container.scroll({ top: (refMessage.offsetTop - 80) });
 		container.scroll({ top: (refMessage.offsetTop - 80)});
 		const classList = refMessage.classList;
 		classList.add('chat__tagged');

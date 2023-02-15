@@ -24,7 +24,6 @@ export const Message = observer(({className, data, replyHandler, ...props}: Mess
 	
 	const senderId = userStorage.userData?.id;
 	
-
 	const [isActiveReply, setActiveReply] = useState<boolean>(false)
 
 	let referencedMessage: MessageData | null = null;

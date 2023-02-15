@@ -24,6 +24,6 @@
 		border-radius: 10px;
 
 		@include getMainColor();
-		@include getFont($size: large, $weight: 400, $color: $green-color, $height: 5px);
+		@include getFont($size: large, $weight: 400, $color: $green-color, $height: 24px);
 	}
 }
