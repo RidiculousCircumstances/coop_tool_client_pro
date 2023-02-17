@@ -1,0 +1,60 @@
+@import '../../../styles/mixins.scss';
+@import '../../../styles/variables.scss';
+
+.message {
+	display: flex;
+	padding: 0 50px;
+	flex-wrap: wrap;
+	flex-direction: column;
+
+	@media(max-width: 1360px) {
+		padding: 0 35px;
+	} 
+
+	&__user-name {
+		@include getFont($size: medium, $weight: 600, $color: $blue-color, $height: 24px);
+
+		&--our {
+			@include getFont($size: medium, $weight: 600, $color: $green-color, $height: 24px);
+		}
+	}
+
+	&__time {
+		margin-bottom: -3px;
+		@include getFont($size: small, $weight: 500, $color: $gray-color, $height: 24px);
+	}
+
+	&__body {
+		word-break: break-word;
+		@include getFont($size: medium, $weight: 500, $color: $gray-color, $height: 24px);
+	}
+
+	&__title {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin-bottom: 5px;
+	}
+
+	&__reply-icon {
+		content: url('../reply.svg');
+		margin-left: auto;
+		position: relative;
+		top: 22px;
+		right: -15px;
+		opacity: 0;
+		transition: all .5s;
+		cursor: pointer;
+		pointer-events: none;
+		&--active {
+			opacity: 1;
+			pointer-events: all;
+			transition: all .5s;
+		}
+	}
+
+	&__tagged-msg{
+		left: -50px;
+	}
+	
+}

@@ -5,7 +5,7 @@ export const CONST = {
 	EMPTY_FIELD_ERROR: '*Заполните обязательные поля',
 	ALREADY_EXISTS_ERROR: '*Пользователь с таким email уже существует',
 	AUTH_ERROR: '*Введен неправильный логин или пароль',
-
+	BACK: 'Назад',
 	DROPTOP_NEW: 'Введите название комнаты',
 	DROPTOP_NEW_BUTTON: 'Создать',
 

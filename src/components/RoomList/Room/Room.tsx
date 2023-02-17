@@ -1,4 +1,4 @@
-import { MouseEventHandler, useCallback, useContext, useRef, useState } from 'react';
+import { MouseEventHandler, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { RoomProps } from './Room.props';
 import cn from 'classnames';
 import './room.scss';
@@ -18,16 +18,26 @@ export const Room = observer(({room, activeRoom, setActiveRoom, className, ...pr
 
 	const clipboard = useClipboard();
 
+	useEffect(() => {
+		const listen = async () => {
+			await roomStorage.listenRoom();
+		}
+		listen();
+		
+	}, [roomStorage.roomJoinData, roomStorage.roomLeaveData, roomStorage]);
 
 	/**
-	 * Очень важный обработчик - устанавливает прослушку всей комнаты, присоединяет к комнате.
+	 * Устанавливает прослушку комнаты, обрабатывает: вход / выход.
 	 */
 	const handleJoinRoom = () => {
 		if (room.id !== activeRoom) {
 			const userId = userStorage.userData?.id;
-			roomStorage.setActiveRoom(room, userId!);
+			if (!userId) {
+				console.log('There is no user id');
+				return;
+			}
+			roomStorage.setActiveRoom(room, userId);
 
-			roomStorage.listenRoom();
 			setActiveRoom(room.id);
 	
 		}

@@ -33,15 +33,17 @@ export class Gateway {
 	}
 
 	public listenJoin() {
+
 		return new Promise((resolve) => {
 			this.socket.on('joinRoom', (data: JoinRoom) => {
+				console.log(data);
 				resolve(data);
 			});
 		});
 	}
 
 	public listenLeave() {
-			return new Promise((resolve) => {
+		return new Promise((resolve) => {
 			this.socket.on('leaveRoom', (data: LeaveRoom) => {
 				resolve(data);
 				});
@@ -55,7 +57,6 @@ export class Gateway {
 	public listenMessages() {
 		return new Promise((resolve) => {
 			this.socket.on('sendMessage', (data: SendMessage) => {
-				console.log(data)
 				resolve(data);
 				});
 			});

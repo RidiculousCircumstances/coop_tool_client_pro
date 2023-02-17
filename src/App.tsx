@@ -6,11 +6,9 @@ import { RoomList } from './components/RoomList/RoomList';
 import { NotifyPopup } from './components/NotifyPopup/NotifyPopup';
 import './styles/app.scss';
 import { Chat } from './components/Chat/Chat';
-import { Button } from './components/Button/Button';
-import { ChatStorage } from './storage/chat/Chat.storage';
 
 export const App = observer(() => {
-  const { userStorage, roomStorage, chatStorage } = useContext(Context);
+  const { userStorage, roomStorage } = useContext(Context);
   const [activeJoinPopup, setActiveJoinPopup] = useState<boolean>(false);
   const [activeLeavePopup, setActiveLeavePopup] = useState<boolean>(false);
   const [nickname, setNickname] = useState<string>('');
@@ -19,37 +17,46 @@ export const App = observer(() => {
    * Управляет событием присоединения к комнате
    */
   useEffect(() => {
-    const user = roomStorage.getJoinedUser();
+    
 
-    if (!roomStorage.roomJoinData || !user) {
+    if (!roomStorage.roomJoinData) {
       return;
     }
 
+    const user = roomStorage.getJoinedUser();
+
+    if (!user) {
+      return;
+    }
 
     setActiveJoinPopup(true);
     setNickname(user.nickname);
-
+    roomStorage.roomJoinData = null;
     setTimeout(() => {
       setActiveJoinPopup(false);
-    }, 3000);
+    }, 4000);
 
   }, [roomStorage.roomJoinData, roomStorage]);
-
 
   /**
    * Управляет событием выхода из комнаты
    */
   useEffect(() => {
 
+ 
+    if (!roomStorage.roomLeaveData) {
+      return;
+    }
+
     const user = roomStorage.getLeavedUser();
 
-    if (!roomStorage.roomJoinData || !user) {
+    if (!user) {
       return;
     }
 
     setActiveLeavePopup(true);
     setNickname(user.nickname);
-
+    roomStorage.roomLeaveData = null;
     setTimeout(() => {
       setActiveLeavePopup(false);
     }, 3000);

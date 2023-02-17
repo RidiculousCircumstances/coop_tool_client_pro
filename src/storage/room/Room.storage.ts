@@ -1,8 +1,7 @@
 import { makeAutoObservable } from 'mobx';
-import { MessageData } from '../../models/Message/MessageData';
 import { RoomCreateData } from '../../models/Room/RoomCreateData';
 import { RoomData } from '../../models/Room/RoomData';
-import { JoinRoom, LeaveRoom, SendMessage } from '../../services/gateway/events';
+import { JoinRoom, LeaveRoom } from '../../services/gateway/events';
 import { Gateway } from '../../services/gateway/Gateway';
 import { RoomService } from '../../services/RoomService';
 
@@ -14,16 +13,37 @@ export class RoomStorage {
 
 	gateway: Gateway = Gateway.getInstance();
 
-	roomJoinData: JoinRoom | null = null;
+	_roomJoinData: JoinRoom | null = null;
 
-	roomLeaveData: LeaveRoom | null = null;
+	_roomLeaveData: LeaveRoom | null = null;
+
+
+	set roomJoinData(data: JoinRoom | null) {
+		this._roomJoinData = data;
+	}
+
+	set roomLeaveData(data: LeaveRoom | null) {
+		this._roomLeaveData = data;
+	}
+
+	get roomJoinData() {
+		return this._roomJoinData;
+	}
+
+	get roomLeaveData() {
+		return this._roomLeaveData;
+	}
 
 	constructor () {
 		makeAutoObservable(this);
 	}
 
 
-
+	/**
+	 * 
+	 * @param room 
+	 *  Добавление комнаты в массив комнат
+	 */
 	private appendRoom(room: RoomData) {
 		const checkExists = this.rooms.map((exRoom) => {
 			if (exRoom.id === room.id) {
@@ -37,6 +57,11 @@ export class RoomStorage {
 
 	}
 
+	/**
+	 * 
+	 * @param rooms 
+	 * Добавление комнат разом
+	 */
 	public setRooms(rooms: RoomData[]) {
 		this.rooms = rooms;
 	}
@@ -54,7 +79,6 @@ export class RoomStorage {
 		} catch (e: any) {
 			return (e.response.status);
 		}
-
 	}
 
 	/**
@@ -102,7 +126,6 @@ export class RoomStorage {
 	async listenRoom () {
 		this.roomJoinData = await this.gateway.listenJoin() as JoinRoom;
 		this.roomLeaveData = await this.gateway.listenLeave() as LeaveRoom;
-		
 	}
 
 	/**
@@ -124,6 +147,7 @@ export class RoomStorage {
 	public getJoinedUser () {
 		const joinedUserId = this.roomJoinData?.clientId;
 		if (joinedUserId) {
+			this.roomJoinData = null;
 			return this.getTargetUser(joinedUserId);
 		}
 		return null;
@@ -133,6 +157,7 @@ export class RoomStorage {
 	public getLeavedUser() {
 		const leavedUser = this.roomLeaveData?.clientId;
 		if (leavedUser) {
+			this.roomLeaveData = null;
 			return this.getTargetUser(leavedUser);
 		}
 		return null;

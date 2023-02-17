@@ -9,6 +9,12 @@ import './chat.scss';
 import { Message } from './Message/Message';
 import { ReferencedMessage } from './ReferencedMessage/ReferencedMessage';
 import cn from 'classnames';
+import { Info } from './Info/Info';
+
+export enum DisplayTypes {
+	Chat,
+	RoomInfo
+}
 
 export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => {
 
@@ -20,11 +26,14 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 	const [taggedOnReplyMsg, setTaggedOnReplyMsg] = useState<MessageData | null>(null);
 	const [files, setFile] = useState<File[] | null>(null);
 	const [text, setText] = useState<string>('');
-
 	const [showBackTo, setShowBackTo] = useState<boolean>(true);
 
-	const roomName = roomStorage.activeRoom?.name
 
+	const [displayType, setDisplayType] = useState<DisplayTypes>(DisplayTypes.Chat);
+
+
+
+	const roomName = roomStorage.activeRoom?.name
 	chatStorage.chatContainerRef = chatContainerRef;
 
 	useEffect(() => {
@@ -55,6 +64,17 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 		loadMessages();
 
 	}, [roomStorage.activeRoom, roomStorage, chatStorage]);
+
+
+	/**
+	 * Сбрасывает состояния при смене комнаты
+	 */
+	useEffect(() => {
+		setDisplayType(DisplayTypes.Chat);
+		setText('');
+		setFile(null);
+		setMessages(null);
+	}, [roomStorage.activeRoom])
 
 	/**
 	 * Получает входящее сообщение
@@ -279,6 +299,14 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 		setTaggedOnReplyMsg(taggedMessage);
 	}
 
+	const goToRoomInfo = () => {
+		setDisplayType(DisplayTypes.RoomInfo);
+	}
+
+	const goToRoomChat = () => {
+		setDisplayType(DisplayTypes.Chat);
+	}
+
 	/**
 	 * 
 	 * @returns 
@@ -298,7 +326,6 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 				<div className='chat__empty'>Здесь пока что ничего нет...</div>
 			)
 		}
-
 
 	}
 
@@ -325,27 +352,50 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 	return (
 	<div className='chat'>
 		<div className='chat__top-bar'>
-			<div className='chat__name'>
+
+			<div className={cn('chat__back-button-container')}>
+					<div hidden={displayType === DisplayTypes.Chat} className='chat__back-row' onClick={goToRoomChat}>
+					<span className='icon chat__back-button'></span>
+					<span className='chat__back-title'>{CONST.BACK}</span>
+				</div>
+			</div>
+
+			<div className='chat__name' onClick={goToRoomInfo} title='Информация'>
 				{roomName ?? 'Выберите комнату' }
 			</div>
+
+			<div className='chat__action-dots-wrapper'>
 				<div className='chat__action-dots'>...</div>
+			</div>
+
 		</div>
-
-
 		
 		<div ref={chatContainerRef} className='chat__container'>
-			<ul className='chat__message-list'>
-				<div className='chat_messages'>
-					{(messagesList())}
-				</div>
-			</ul>
+			{/* 
+				Здесь будет свитчер с выбором чата или информации о комнате
+			*/}
+
+			{displayType === DisplayTypes.Chat &&
+				<ul className='chat__message-list'>
+					<div className='chat_messages'>
+						{(messagesList())}
+					</div>
+				</ul>
+			}
+
+			{displayType === DisplayTypes.RoomInfo &&
+
+				<div>1111111111</div>
+
+			}
+
 		</div>
 
 
 		<div className={cn('chat__back-to-icon-wrapper')} onClick={handleBackToZero} hidden={showBackTo}>
 			<div className='icon chat__back-to-icon'></div>
 		</div>
-		<div className='chat__bottom-bar'>
+			<div className='chat__bottom-bar' hidden={displayType === DisplayTypes.RoomInfo}>
 			{files && 
 			<div className='chat__preload-container'>
 					{filePreviews()}
