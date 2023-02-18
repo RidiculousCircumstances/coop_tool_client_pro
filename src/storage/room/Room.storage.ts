@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import { RoomCreateData } from '../../models/Room/RoomCreateData';
 import { RoomData } from '../../models/Room/RoomData';
-import { JoinRoom, LeaveRoom } from '../../services/gateway/events';
+import { JoinRoom, LeaveRoom, UsersCirculation } from '../../services/gateway/events';
 import { Gateway } from '../../services/gateway/Gateway';
 import { RoomService } from '../../services/RoomService';
 
@@ -13,31 +13,43 @@ export class RoomStorage {
 
 	gateway: Gateway = Gateway.getInstance();
 
-	_roomJoinData: JoinRoom | null = null;
+	private _roomUserData: UsersCirculation[] = [];
 
-	_roomLeaveData: LeaveRoom | null = null;
+	lastJoined: JoinRoom | null = null;
+	lastLeaved: LeaveRoom | null = null;
 
-
-	set roomJoinData(data: JoinRoom | null) {
-		this._roomJoinData = data;
+	private set roomJoinData(data: UsersCirculation) {
+		data && this._roomUserData.push(data);
+		this.lastJoined = data;
 	}
 
-	set roomLeaveData(data: LeaveRoom | null) {
-		this._roomLeaveData = data;
+	private set roomLeaveData(data: LeaveRoom) {
+		this.deleteByProperty(data.clientId, 'clientId', this._roomUserData) as UsersCirculation[];
+		this.lastLeaved = data;
 	}
 
-	get roomJoinData() {
-		return this._roomJoinData;
-	}
-
-	get roomLeaveData() {
-		return this._roomLeaveData;
+	get roomUsersData() {
+		return this._roomUserData;
 	}
 
 	constructor () {
 		makeAutoObservable(this);
 	}
 
+
+	/**
+	 * 
+	 * @param needle 
+	 * @param array 
+	 * Удаляет элемент из массива по его значению. Значение должно быть уникальным
+	 */
+	private deleteByProperty (needle: any, needleName: string, array: Array<any>) {
+		for (let i = 0; i < array.length; i++) {
+			if (array[i][needleName] === needle) {
+	 			return array.splice(i, 1);
+			}
+		}
+	}
 
 	/**
 	 * 
@@ -54,7 +66,17 @@ export class RoomStorage {
 		if (!checkExists.includes(1)) {
 			this.rooms.unshift(room);
 		}			
+	}
 
+	public checkOnline (id: number) {
+		const isOnline = this.roomUsersData.filter((user) => {
+			return user.clientId === id;
+		});
+
+		if (isOnline.length > 0) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -123,8 +145,10 @@ export class RoomStorage {
 	/**
 	 * Делегирует прослушку комнаты
 	 */
-	async listenRoom () {
+	async listenJoin() {
 		this.roomJoinData = await this.gateway.listenJoin() as JoinRoom;
+	}
+	async listenLeave() {
 		this.roomLeaveData = await this.gateway.listenLeave() as LeaveRoom;
 	}
 
@@ -135,33 +159,29 @@ export class RoomStorage {
 	 * Получает данные пользователя в активной комнате по id
 	 */
 	public getTargetUser(targetUserId: number) {
-
 		if (this.activeRoom) {
 			return this.activeRoom.users.filter((user) => {
 				return user.id === targetUserId;
 			})[0];
 		}
-			
 	}
 
 	public getJoinedUser () {
-		const joinedUserId = this.roomJoinData?.clientId;
+		const joinedUserId = this.lastJoined?.clientId;
 		if (joinedUserId) {
-			this.roomJoinData = null;
+			// this.lastJoined = null;
 			return this.getTargetUser(joinedUserId);
 		}
 		return null;
-		
 	}
 
 	public getLeavedUser() {
-		const leavedUser = this.roomLeaveData?.clientId;
+		const leavedUser = this.lastLeaved?.clientId;
 		if (leavedUser) {
-			this.roomLeaveData = null;
+			this.lastLeaved = null;
 			return this.getTargetUser(leavedUser);
 		}
 		return null;
 	}
-
 
 }

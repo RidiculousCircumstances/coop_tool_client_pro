@@ -8,6 +8,11 @@ export interface LeaveRoom {
 	clientId: number;
 }
 
+export interface UsersCirculation {
+	roomId: string;
+	clientId: number;
+}
+
 export interface SendMessage {
 	messageId: number;
 	roomId: string;

@@ -15,16 +15,32 @@ export const Room = observer(({room, activeRoom, setActiveRoom, className, ...pr
 	const [isHoveredRoom, setHoveredRoom] = useState<boolean>(false);
 	const { roomStorage, userStorage } = useContext(Context);
 
-
 	const clipboard = useClipboard();
 
 	useEffect(() => {
+		
+		if (activeRoom !== room.id) {
+			return;
+		}
 		const listen = async () => {
-			await roomStorage.listenRoom();
+			await roomStorage.listenJoin();			
 		}
 		listen();
+		console.log(roomStorage.roomUsersData.length);
+	
+	}, [roomStorage.lastJoined, roomStorage, activeRoom, room.id]);
+
+	useEffect(() => {
 		
-	}, [roomStorage.roomJoinData, roomStorage.roomLeaveData, roomStorage]);
+		if (activeRoom !== room.id) {
+			return;
+		}
+		const listen = async () => {
+			await roomStorage.listenLeave();
+		}
+		listen();
+		console.log(roomStorage.roomUsersData.length);
+	}, [roomStorage.lastLeaved, roomStorage, activeRoom, room.id]);
 
 	/**
 	 * Устанавливает прослушку комнаты, обрабатывает: вход / выход.

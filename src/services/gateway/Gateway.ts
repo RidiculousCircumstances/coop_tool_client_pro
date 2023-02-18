@@ -36,7 +36,6 @@ export class Gateway {
 
 		return new Promise((resolve) => {
 			this.socket.on('joinRoom', (data: JoinRoom) => {
-				console.log(data);
 				resolve(data);
 			});
 		});

@@ -32,8 +32,6 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 
 	const [displayType, setDisplayType] = useState<DisplayTypes>(DisplayTypes.Chat);
 
-
-
 	const roomName = roomStorage.activeRoom?.name
 	chatStorage.chatContainerRef = chatContainerRef;
 

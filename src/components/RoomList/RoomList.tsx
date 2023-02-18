@@ -22,7 +22,6 @@ export const RoomList = observer(({...props}: RoomListProps): JSX.Element => {
 
 	const { roomStorage } = useContext(Context);
 	
-
 	let droptopText = '';
 	let droptopButtonLabel = '';
 	if (droptopType === 'join') {
