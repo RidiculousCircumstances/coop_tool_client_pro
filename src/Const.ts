@@ -1,3 +1,5 @@
+type ThreeForms = [string, string, string]
+
 export const CONST = {
 	SOCKET_URL: 'ws://83.246.208.128:5000',
 	HTTPURL: 'http://83.246.208.128:5000',
@@ -11,9 +13,15 @@ export const CONST = {
 
 	DROPTOP_JOIN: 'Введите id комнаты',
 	DROPTOP_JOIN_BUTTON: 'Присоединиться',
-
 	COPY_TEXT: 'Копировать id комнаты',
 	JOIN: 'Войти',
+	USERS: ['участник', 'участника', 'участников'] as ThreeForms,
+	INFO: 'Информация',
+	CHOOSE_ROOM: 'Выберите комнату',
+	CREATED: 'cоздано',
+	MEMBERS: 'Участники',
+
+
 	ALLOWED_FILES: ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'],
 	TAGGED_MESSAGE_LENGTH: 20,
 }

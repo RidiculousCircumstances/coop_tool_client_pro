@@ -134,7 +134,7 @@ export class RoomStorage {
 	 * @returns 
 	 * Получает данные пользователя в активной комнате по id
 	 */
-	private getTargetUser(targetUserId: number) {
+	public getTargetUser(targetUserId: number) {
 
 		if (this.activeRoom) {
 			return this.activeRoom.users.filter((user) => {

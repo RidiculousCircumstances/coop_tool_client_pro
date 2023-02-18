@@ -10,6 +10,7 @@ import { Message } from './Message/Message';
 import { ReferencedMessage } from './ReferencedMessage/ReferencedMessage';
 import cn from 'classnames';
 import { Info } from './Info/Info';
+import { UsersCount } from './usersCount/UsersCount';
 
 export enum DisplayTypes {
 	Chat,
@@ -307,6 +308,10 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 		setDisplayType(DisplayTypes.Chat);
 	}
 
+	const activeIfChat = () => {
+		return displayType === DisplayTypes.Chat;
+	}
+
 	/**
 	 * 
 	 * @returns 
@@ -349,53 +354,56 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 		});		
 	}
 
+	const usersCount = roomStorage.activeRoom?.users.length;
+
 	return (
-	<div className='chat'>
-		<div className='chat__top-bar'>
+		<div className='chat'>
+			<div className='chat__top-bar'>
 
-			<div className={cn('chat__back-button-container')}>
-					<div hidden={displayType === DisplayTypes.Chat} className='chat__back-row' onClick={goToRoomChat}>
-					<span className='icon chat__back-button'></span>
-					<span className='chat__back-title'>{CONST.BACK}</span>
+				<div className={cn('chat__back-button-container')}>
+						<div hidden={activeIfChat()} className='chat__back-row' onClick={goToRoomChat}>
+						<span className='icon chat__back-button'></span>
+						<span className='chat__back-title'>{CONST.BACK}</span>
+					</div>
 				</div>
-			</div>
 
-			<div className='chat__name' onClick={goToRoomInfo} title='Информация'>
-				{roomName ?? 'Выберите комнату' }
-			</div>
+					<div className='chat__name' onClick={goToRoomInfo} title={activeIfChat() ? CONST.INFO : ''}>
+					{	
+						roomName ? (activeIfChat() ? (
+							<div>
+								{roomName}
+								{usersCount  && <UsersCount className='chat__users-count underline' count={usersCount} />}
+							</div>
+							) : CONST.INFO) : CONST.CHOOSE_ROOM
+					}
+				</div>
 
-			<div className='chat__action-dots-wrapper'>
-				<div className='chat__action-dots'>...</div>
-			</div>
+				<div className='chat__action-dots-wrapper'>
+					<div className='chat__action-dots' hidden={!roomName}>...</div>
+				</div>
 
-		</div>
+			</div>
 		
-		<div ref={chatContainerRef} className='chat__container'>
-			{/* 
-				Здесь будет свитчер с выбором чата или информации о комнате
-			*/}
-
 			{displayType === DisplayTypes.Chat &&
-				<ul className='chat__message-list'>
+			<div ref={chatContainerRef} className='chat__container'>
+				<ul className='chat__list'>
 					<div className='chat_messages'>
 						{(messagesList())}
 					</div>
 				</ul>
+			</div>
 			}
-
-			{displayType === DisplayTypes.RoomInfo &&
-
-				<div>1111111111</div>
-
+		
+			{displayType === DisplayTypes.RoomInfo && roomStorage.activeRoom &&
+				<Info data={roomStorage.activeRoom} />
 			}
+			
 
-		</div>
-
-
-		<div className={cn('chat__back-to-icon-wrapper')} onClick={handleBackToZero} hidden={showBackTo}>
-			<div className='icon chat__back-to-icon'></div>
-		</div>
-			<div className='chat__bottom-bar' hidden={displayType === DisplayTypes.RoomInfo}>
+			<div className={cn('chat__back-to-icon-wrapper')} onClick={handleBackToZero} 
+					hidden={showBackTo || displayType === DisplayTypes.RoomInfo}>
+				<div className='icon chat__back-to-icon'></div>
+			</div>
+			<div className='chat__bottom-bar' hidden={!activeIfChat() || !roomName}>
 			{files && 
 			<div className='chat__preload-container'>
 					{filePreviews()}

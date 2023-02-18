@@ -1,60 +1,58 @@
 @import '../../../styles/mixins.scss';
 @import '../../../styles/variables.scss';
 
-.message {
-	display: flex;
-	padding: 0 50px;
-	flex-wrap: wrap;
-	flex-direction: column;
+.info {
+	margin-left: 5%;
 
-	@media(max-width: 1360px) {
-		padding: 0 35px;
-	} 
-
-	&__user-name {
-		@include getFont($size: medium, $weight: 600, $color: $blue-color, $height: 24px);
-
-		&--our {
-			@include getFont($size: medium, $weight: 600, $color: $green-color, $height: 24px);
-		}
-	}
-
-	&__time {
-		margin-bottom: -3px;
-		@include getFont($size: small, $weight: 500, $color: $gray-color, $height: 24px);
-	}
-
-	&__body {
-		word-break: break-word;
-		@include getFont($size: medium, $weight: 500, $color: $gray-color, $height: 24px);
-	}
-
-	&__title {
+	&__header {
 		display: flex;
-		align-items: center;
-		gap: 10px;
-		margin-bottom: 5px;
+		justify-content: left;
+		flex-direction: column;
+		padding-bottom: 10px;
 	}
 
-	&__reply-icon {
-		content: url('../reply.svg');
-		margin-left: auto;
-		position: relative;
-		top: 22px;
-		right: -15px;
-		opacity: 0;
-		transition: all .5s;
-		cursor: pointer;
-		pointer-events: none;
-		&--active {
-			opacity: 1;
-			pointer-events: all;
-			transition: all .5s;
-		}
+	&__room-about {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		text-align: left;
 	}
 
-	&__tagged-msg{
-		left: -50px;
+	&__name {
+		@include getFont($size: large, $weight: 500, $color: $text-gray-color, $height: 24px);
+		margin-bottom: 10px;
 	}
-	
+
+	&__flex-row-wrapper {
+		@include getFont($size: small, $weight: 500, $color: $text-gray-color, $height: 24px);
+	}
+
+	&__line {
+		background-color: $border-color;
+		height: 8px;
+		width: 95%;
+		border-radius: 10%;
+	}
+
+	&__members {
+		width: fit-content;
+		@include getFont($size: medium, $weight: 500, $color: $text-gray-color, $height: 24px);
+		border-bottom: 1px solid $border-color;
+	}
+
+	&__users-container {
+
+	}
+
+	&__users {
+
+		margin-left: 10px;
+		margin-top: 20px;
+
+		@include getFont($size: medium, $weight: 800, $color: $blue-color, $height: 24px);
+	}
+
+	&__user {
+		padding-bottom: 10px;
+	}
 }
