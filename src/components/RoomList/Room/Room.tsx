@@ -26,7 +26,6 @@ export const Room = observer(({room, activeRoom, setActiveRoom, className, ...pr
 			await roomStorage.listenJoin();			
 		}
 		listen();
-		console.log(roomStorage.roomUsersData.length);
 	
 	}, [roomStorage.lastJoined, roomStorage, activeRoom, room.id]);
 
@@ -39,7 +38,6 @@ export const Room = observer(({room, activeRoom, setActiveRoom, className, ...pr
 			await roomStorage.listenLeave();
 		}
 		listen();
-		console.log(roomStorage.roomUsersData.length);
 	}, [roomStorage.lastLeaved, roomStorage, activeRoom, room.id]);
 
 	/**

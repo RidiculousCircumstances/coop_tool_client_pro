@@ -1,49 +1,52 @@
-import { makeAutoObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { MessageData } from '../../models/Message/MessageData';
 import { ChatService } from '../../services/ChatService';
 import { SendMessage } from '../../services/gateway/events';
-import { Gateway } from '../../services/gateway/Gateway';
+import { Storage } from '../Storage';
 
-export class ChatStorage {
+export class ChatStorage extends Storage {
 
+	@observable
 	private _messages: MessageData[] | null = null;
-
-	incomingMessage: SendMessage | null = null;
-	
-	gateway: Gateway = Gateway.getInstance();
-
-	private _chatContainerRef: React.RefObject<HTMLDivElement> | null = null;
-
-	private taggedMessage: MessageData | null = null;
-
-
-	set chatContainerRef(ref: React.RefObject<HTMLDivElement> | null) {
-		this._chatContainerRef = ref;
-	}
-
-	get chatContainerRef() {
-		return this._chatContainerRef!;
-	}
-
 
 	set messages(messages: MessageData[] | null) {
 		if (messages) {
 			this._messages = messages.reverse();
 		}
 	}
-
 	set message(message: MessageData | null) {
 		if (message) {
 			this._messages?.push(message);
 		}
 	}
-
-	get messages () {
+	@computed
+	get messages() {
 		return this._messages;
 	}
 
+	@observable
+	private _incomingMessage: SendMessage | null = null;
+	set incomingMessage(msg: SendMessage | null) {
+		this._incomingMessage = msg;
+	}
+	@computed
+	get incomingMessage() {
+		return this._incomingMessage;
+	}
+	
+	@observable
+	private _chatContainerRef: React.RefObject<HTMLDivElement> | null = null;
+	set chatContainerRef(ref: React.RefObject<HTMLDivElement> | null) {
+		this._chatContainerRef = ref;
+	}
+	@computed
+	get chatContainerRef() {
+		return this._chatContainerRef!;
+	}
+
 	constructor () {
-		makeAutoObservable(this);
+		super();
+		makeObservable(this);
 	}
 
 	getMessageById (messageId: number) {
@@ -52,6 +55,13 @@ export class ChatStorage {
 		});
 	}
 
+	/**
+	 * 
+	 * @param chatId 
+	 * @returns 
+	 * получает и устанавливает сообщения чата с базовым лимитом
+	 */
+	@action
 	async getMessages (chatId: string) {
 		try {
 			const messages = await ChatService.getMessages(chatId);
@@ -63,6 +73,10 @@ export class ChatStorage {
 
 	}
 
+	/**
+	 * получает сообщение
+	 */
+	@action
 	async getMessage (messageid: number) {
 		try {
 			const message = await ChatService.getMessage(messageid);
@@ -73,11 +87,18 @@ export class ChatStorage {
 		}
 	}
 
+	/**
+	 * 
+	 * @param data 
+	 * @returns 
+	 * Отправляет сообщение и добавляет его в состояние сообщений
+	 */
+	@action
 	async sendMessage (data: FormData) {
 		try {
 			const {data: messageData} = await ChatService.sendMessage(data);
 			this.message = messageData;
-			this.gateway.notifySendMessage({
+			Storage.gateway?.notifySendMessage({
 				messageId: messageData.messageId,
 				roomId: messageData.chatId,
 				userId: messageData.userId,
@@ -89,10 +110,10 @@ export class ChatStorage {
 		}
 	}
 
+	@action
 	async listenMessage() {
-		this.incomingMessage = await this.gateway.listenMessages() as SendMessage;
+		this.incomingMessage = await Storage.gateway?.listenMessages() as SendMessage;
 	}
-
 
 }
 

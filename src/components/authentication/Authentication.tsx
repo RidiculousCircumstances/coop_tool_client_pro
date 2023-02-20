@@ -8,6 +8,8 @@ import { RegistrationFormData } from './RegistrationFormInterface';
 import { Context } from '../..';
 import { observer } from 'mobx-react-lite';
 import { AuthForm } from './authForm/AuthForm';
+import { Storage } from '../../storage/Storage';
+import { Gateway } from '../../services/gateway/Gateway';
 
 export const Authentication = observer(({...props}: AuthenticationProps) => {
 
@@ -16,12 +18,21 @@ export const Authentication = observer(({...props}: AuthenticationProps) => {
 	const [error, setError] = useState<number>();
 
 	const authForm = useForm<AuthFormData>();
-	const context = useContext(Context);
+	const { userStorage } = useContext(Context);
 
 
-	const tryRequest =async (cb: CallableFunction) => {
+
+	/**
+	 * 
+	 * @param cb 
+	 */
+	const tryAuth =async (cb: CallableFunction) => {
 		const res = await cb();
-		if (res === 201) {
+		console.log(res.status);
+		if (res.status === 201 || res.status === 200 ) {
+			const userId = res.data.id;
+			const gateway = Gateway.getInstance(userId);
+			Storage.setSocket(gateway);
 			setIsSuccess(true);
 			authForm.reset();
 		} else {
@@ -31,11 +42,11 @@ export const Authentication = observer(({...props}: AuthenticationProps) => {
 	}
 
 	const onSubmitAuth = async (formData: AuthFormData) => {
-		tryRequest(() => context.userStorage.login(formData.email, formData.password));
+		tryAuth(() => userStorage.login(formData.email, formData.password));
 	}
 
 	const onSubmitRegistration = async (formData: RegistrationFormData) => {
-		tryRequest(() => context.userStorage.registration(formData));
+		tryAuth(() => userStorage.registration(formData));
 	}
 
 	const formProps = {

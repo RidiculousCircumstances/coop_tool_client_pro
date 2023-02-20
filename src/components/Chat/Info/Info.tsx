@@ -25,7 +25,7 @@ export const Info = observer(({className, data, ...props}: InfoProps): JSX.Eleme
 	const users = (data: RoomData): JSX.Element[] => {
 
 		const users = data.users;
-		
+		console.log(users);
 		return users.map((user) => {
 
 			let isOnline = false;

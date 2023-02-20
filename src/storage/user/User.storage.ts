@@ -35,8 +35,8 @@ export class UserStorage {
 		try {
 
 			const res = await AuthService.login(email, password);
-		
 			this.handleResponse(res);
+			return res;
 		} catch (e: any) {
 			return (e);
 		}

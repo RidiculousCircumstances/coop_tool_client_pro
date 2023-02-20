@@ -1,5 +1,7 @@
 import { makeAutoObservable } from 'mobx';
+import { useContext } from 'react';
 import { Manager, Socket } from 'socket.io-client';
+import { Context } from '../..';
 import { CONST } from '../../Const';
 import { JoinRoom, LeaveRoom, SendMessage } from './events';
 
@@ -10,16 +12,27 @@ export class Gateway {
 	private socket: Socket;
 
 
-	private constructor() {
-		this.manager = new Manager(CONST.SOCKET_URL);
+	private constructor(userId: number) {
+		this.manager = new Manager(CONST.SOCKET_URL, {
+			query: {
+				userId
+			}
+		});
+		
 		this.socket = new Socket(this.manager, '/');
 		makeAutoObservable(this)
 	}
 
-	public static getInstance(): Gateway {
+	/**
+	 * 
+	 * @param userId 
+	 * @returns 
+	 * Возвращает синглтон и задает пользователя сокета
+	 */
+	public static getInstance(userId: number): Gateway {
 
 		if (!Gateway.instance) {
-			Gateway.instance = new Gateway();
+			Gateway.instance = new Gateway(userId);
 		}
 		return Gateway.instance;
 	}
