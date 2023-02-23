@@ -2,6 +2,7 @@ import { action, computed, makeObservable, observable } from 'mobx';
 import { RoomCreateData } from '../../models/Room/RoomCreateData';
 import { RoomData } from '../../models/Room/RoomData';
 import { JoinRoom, LeaveRoom, UsersCirculation } from '../../services/gateway/events';
+import { MemberService } from '../../services/MemberService';
 import { RoomService } from '../../services/RoomService';
 import { Storage } from '../Storage';
 
@@ -13,15 +14,22 @@ export class RoomStorage extends Storage {
 	@observable
 	activeRoom: RoomData | null = null;
 
+
+	/**
+	 * Массив пользователей онлайн
+	 */
 	@observable
 	private _roomUserData: UsersCirculation[] = [];
 	private set roomJoinData(data: UsersCirculation) {
 		data && this._roomUserData.push(data);
 		this.lastJoined = data;
 	}
-	private set roomLeaveData(data: LeaveRoom) {
-		this.deleteByProperty(data.clientId, 'clientId', this._roomUserData) as UsersCirculation[];
+	private set roomLeaveData(data: UsersCirculation) {
+		this.deleteByProperty(data, 'clientId', this._roomUserData) as UsersCirculation[];
 		this.lastLeaved = data;
+	}
+	private set roomUsersData(data: UsersCirculation[]) {
+		this._roomUserData = data;
 	}
 	@computed
 	get roomUsersData() {
@@ -29,8 +37,8 @@ export class RoomStorage extends Storage {
 	}
 
 	@observable
-	private _lastJoined: JoinRoom | null = null;
-	set lastJoined(data: JoinRoom | null) {
+	private _lastJoined: UsersCirculation | null = null;
+	set lastJoined(data: UsersCirculation | null) {
 		this._lastJoined = data;
 	}
 	@computed
@@ -39,8 +47,8 @@ export class RoomStorage extends Storage {
 	}
 
 	@observable
-	_lastLeaved: LeaveRoom | null = null;
-	set lastLeaved(data: JoinRoom | null) {
+	private _lastLeaved: UsersCirculation | null = null;
+	set lastLeaved(data: UsersCirculation | null) {
 		this._lastLeaved = data;
 	}
 	@computed
@@ -53,23 +61,22 @@ export class RoomStorage extends Storage {
 	}
 
 	/**
-	 * 
+	 * Удаляет элемент из массива по его значению. Значение должно быть уникальным
 	 * @param needle 
 	 * @param array 
-	 * Удаляет элемент из массива по его значению. Значение должно быть уникальным
+	 * 
 	 */
 	private deleteByProperty (needle: any, needleName: string, array: Array<any>) {
 		for (let i = 0; i < array.length; i++) {
-			if (array[i][needleName] === needle) {
+			if (array[i][needleName] === needle.clientId) {
 	 			return array.splice(i, 1);
 			}
 		}
 	}
 
 	/**
-	 * 
-	 * @param room 
-	 *  Добавление комнаты в массив комнат
+	 * Добавление комнаты в массив комнат
+	 * @param room
 	 */
 	@action
 	private appendRoom(room: RoomData) {
@@ -84,12 +91,16 @@ export class RoomStorage extends Storage {
 		}			
 	}
 
+	@action
 	public checkOnline (id: number) {
-		const isOnline = this.roomUsersData.filter((user) => {
+		if (this.roomUsersData.length === 0) {
+			return;
+		}
+		const isOnline = this.roomUsersData.some((user) => {
 			return user.clientId === id;
 		});
-
-		if (isOnline.length > 0) {
+	
+		if (isOnline) {
 			return true;
 		}
 		return false;
@@ -98,7 +109,7 @@ export class RoomStorage extends Storage {
 	/**
 	 * 
 	 * @param rooms 
-	 * Добавление комнат разом
+	 * Добавление комнат при подключении
 	 */
 	@action
 	public setRooms(rooms: RoomData[]) {
@@ -150,8 +161,8 @@ export class RoomStorage extends Storage {
 	}
 
 	/**
-	 * Получает все комнаты пользователя при входе в приложение
-	 */
+	 * Получает все комнаты по http пользователя при входе в приложение
+	 */ 
 	@action
 	async getRooms () {
 		try {
@@ -168,12 +179,19 @@ export class RoomStorage extends Storage {
 	 */
 	@action
 	async listenJoin() {
-		this.roomJoinData = await Storage.gateway?.listenJoin() as JoinRoom;
+		this.roomJoinData = await Storage.gateway?.listenJoin() as UsersCirculation;
 	}
 
 	@action
 	async listenLeave() {
-		this.roomLeaveData = await Storage.gateway?.listenLeave() as LeaveRoom;
+		this.roomLeaveData = await Storage.gateway?.listenLeave() as UsersCirculation;
+	}
+
+	@action
+	async setUsersOnline() {
+		const usersOnline = await Storage.gateway?.listenUsersOnline() as { clientIds: UsersCirculation[] };
+		
+		this.roomUsersData = usersOnline.clientIds;
 	}
 
 	/**
@@ -182,8 +200,6 @@ export class RoomStorage extends Storage {
 	 * @returns 
 	 * Получает данные пользователя в активной комнате по id
 	 */
-
-
 	public getTargetUser(targetUserId: number) {
 		if (this.activeRoom) {
 			return this.activeRoom.users.filter((user) => {
@@ -192,16 +208,13 @@ export class RoomStorage extends Storage {
 		}
 	}
 
-
 	public getJoinedUser () {
 		const joinedUserId = this.lastJoined?.clientId;
 		if (joinedUserId) {
-			// this.lastJoined = null;
 			return this.getTargetUser(joinedUserId);
 		}
 		return null;
 	}
-
 
 	public getLeavedUser() {
 		const leavedUser = this.lastLeaved?.clientId;
@@ -210,6 +223,21 @@ export class RoomStorage extends Storage {
 			return this.getTargetUser(leavedUser);
 		}
 		return null;
+	}
+
+	@action
+	public async addRoomMember(id: number) {
+		const res = await MemberService.getMember(id);
+		try {
+			const member = res.data;
+			this.activeRoom?.users.push({
+				id: member.id,
+				nickname: member.nickname,
+			});
+		} catch (e: any) {
+			console.log(e);
+			return e;
+		}
 	}
 
 }

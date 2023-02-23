@@ -9,7 +9,6 @@ export interface LeaveRoom {
 }
 
 export interface UsersCirculation {
-	roomId: string;
 	clientId: number;
 }
 

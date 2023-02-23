@@ -28,13 +28,12 @@ export const Authentication = observer(({...props}: AuthenticationProps) => {
 	 */
 	const tryAuth =async (cb: CallableFunction) => {
 		const res = await cb();
-		console.log(res.status);
 		if (res.status === 201 || res.status === 200 ) {
 			const userId = res.data.id;
-			const gateway = Gateway.getInstance(userId);
-			Storage.setSocket(gateway);
 			setIsSuccess(true);
 			authForm.reset();
+			const gateway = Gateway.getInstance(userId);
+			Storage.setSocket(gateway);
 		} else {
 			setError(res);
 		}
@@ -42,11 +41,11 @@ export const Authentication = observer(({...props}: AuthenticationProps) => {
 	}
 
 	const onSubmitAuth = async (formData: AuthFormData) => {
-		tryAuth(() => userStorage.login(formData.email, formData.password));
+		await tryAuth(() => userStorage.login(formData.email, formData.password));
 	}
 
 	const onSubmitRegistration = async (formData: RegistrationFormData) => {
-		tryAuth(() => userStorage.registration(formData));
+		await tryAuth(() => userStorage.registration(formData));
 	}
 
 	const formProps = {

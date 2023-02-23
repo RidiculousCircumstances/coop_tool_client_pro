@@ -1,3 +1,5 @@
+import { RoomMember } from './RoomMember';
+
 export interface RoomData {
 	id: string;
 	name: string;
@@ -5,6 +7,6 @@ export interface RoomData {
 		id: number;
 		nickname: string;
 	};
-	users: { id: number; nickname: string }[];
+	users: RoomMember[];
 	created_at: Date;
 }

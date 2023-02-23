@@ -80,7 +80,6 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 	 */
 	useEffect(() => {
 		const incomingMessage = chatStorage.incomingMessage;
-		console.log(incomingMessage)
 		if (!incomingMessage) {
 			return;
 		}
@@ -394,7 +393,7 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 			}
 		
 			{displayType === DisplayTypes.RoomInfo && roomStorage.activeRoom &&
-				<Info data={roomStorage.activeRoom} />
+				<Info />
 			}
 			
 

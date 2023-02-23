@@ -1,5 +1,3 @@
-import { JWTTokens } from './JWTTokens';
-
 export interface UserData {
 	id: number,
 	email: string;

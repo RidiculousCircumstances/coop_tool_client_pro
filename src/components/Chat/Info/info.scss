@@ -45,10 +45,24 @@
 	}
 
 	&__users {
-
 		margin-left: 10px;
 		margin-top: 20px;
-
+		overflow-y: scroll;
+		@media(max-height: 1080px) {
+			height: 60vh;
+		}
+		@media(max-height: 860px) {
+			height: 50vh;
+		}
+		@media(max-height: 620px) {
+			height: 45vh;
+		}
+		@media(max-height: 620px) {
+			height: 35vh;
+		}
+		@media(max-height: 470px) {
+			height: 35vh;
+		}
 		@include getFont($size: medium, $weight: 800, $color: $blue-color, $height: 24px);
 	}
 

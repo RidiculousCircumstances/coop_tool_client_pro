@@ -62,10 +62,19 @@ export const RoomList = observer(({...props}: RoomListProps): JSX.Element => {
 	}
 
 
+	/**
+	 * Инпут акшнов комнат
+	 * @param e 
+	 */
 	const handleRoomInput = (e: ChangeEvent<HTMLInputElement>) => {
 		setRoomData(e.target.value);
 	}
 
+	/**
+	 * Управление кнопками присоединения/создания комнат
+	 * @param type 
+	 * @returns 
+	 */
 	const handleRoomsActionButton = (type: ActionRoomMenuType) => {
 	
 		return () => {
@@ -82,13 +91,12 @@ export const RoomList = observer(({...props}: RoomListProps): JSX.Element => {
 
 	useEffect (() => {
 		roomStorage.getRooms();
-	}, []);
+	}, [roomStorage.rooms, roomStorage]);
 
 	const rooms = (): JSX.Element[] | JSX.Element => {
 		const rooms = roomStorage.rooms;
 		if (rooms.length) {
 			return rooms.map((room) => {
-
 				return (
 					<Room key={`${room.id}-room`} activeRoom={activeRoom} setActiveRoom={setActiveRoom} room={room} />
 				)
@@ -97,8 +105,6 @@ export const RoomList = observer(({...props}: RoomListProps): JSX.Element => {
 		} else {
 			return (<div className='room__empty'>Добавьте комнату</div>)
 		}
-
-		
 
 	}
 
@@ -122,7 +128,7 @@ export const RoomList = observer(({...props}: RoomListProps): JSX.Element => {
 				</div>
 		
 					<div className='roomList__chats-action-menu'>
-						<Droptop className='roomList__droptop-chats-action-menu roomList__droptop-no-border-radius' active={isActiveRoomActions}>
+					<Droptop className='roomList__droptop-chats-action-menu roomList__droptop-no-border-radius' active={isActiveRoomActions}>
 						<span className='roomList__droptop-chats-text'>{droptopText}</span>
 						<Input className='roomList__droptop-chats-input' value={roomData} onChange={handleRoomInput}/>
 						<div className='roomList__droptop-chats-button-container'>

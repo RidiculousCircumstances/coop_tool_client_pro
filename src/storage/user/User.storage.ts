@@ -14,10 +14,11 @@ export class UserStorage {
 	}
 
 	private handleResponse (res: AxiosResponse) {
-		if (!res.data.token) {
+		if (!res || !res.data.token) {
 			return new Error('Неизвестная ошибка сервера');
 		}
 		localStorage.setItem('token', res.data.token);
+		console.log(res.data);
 		this.setUserData(res.data);
 		this.setAuth(true);
 	}
@@ -33,8 +34,8 @@ export class UserStorage {
 	async login (email: string, password: string) {
 
 		try {
-
 			const res = await AuthService.login(email, password);
+			console.log(11111111111);
 			this.handleResponse(res);
 			return res;
 		} catch (e: any) {
@@ -47,6 +48,7 @@ export class UserStorage {
 			try {
 				const res = await AuthService.register({ email, nickname, password });
 				this.handleResponse(res);
+				return res;
 			} catch (e: any) {
 				return (e.response.status);
 			}

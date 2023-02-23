@@ -16,10 +16,7 @@ export const App = observer(() => {
    * Управляет событием присоединения к комнате
    */
   useEffect(() => {
-    
-    if (roomStorage.roomUsersData.length === 0) {
-      return;
-    }
+
     const user = roomStorage.getJoinedUser();
     if (!user) {
       return;
@@ -37,14 +34,12 @@ export const App = observer(() => {
    * Управляет событием выхода из комнаты
    */
   useEffect(() => {
-
-    if (roomStorage.roomUsersData.length !== 0) {
-      return;
-    }
+  
     const user = roomStorage.getLeavedUser();
     if (!user) {
       return;
     }
+
     setActiveLeavePopup(true);
     setNickname(user.nickname);
     setTimeout(() => {
@@ -77,7 +72,7 @@ export const App = observer(() => {
             </NotifyPopup>
             
           </div> :
-          <Authentication /> 
+          <Authentication />
         }
 
       </div>

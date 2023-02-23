@@ -4,32 +4,51 @@ import './info.scss';
 import plural from 'plural-ru';
 import { CONST } from '../../../Const';
 import '../../../styles/app.scss';
-import { RoomData } from '../../../models/Room/RoomData';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Context } from '../../..';
 import { UsersCount } from '../usersCount/UsersCount';
 import cn from 'classnames';
 
 
-export const Info = observer(({className, data, ...props}: InfoProps): JSX.Element => {
+
+export const Info = observer(({className, ...props}: InfoProps): JSX.Element => {
 
 	const { roomStorage, userStorage } = useContext(Context);
 
-	const usersCount = data.users.length;
+	const data = roomStorage.activeRoom;
+	if (!data) {
+		throw new Error('Empty active room');
+	}
+	const usersCount = data?.users.length;
 
 	const created_at = (new Date(data.created_at)).toLocaleDateString('ru');
 
 	const userId = userStorage.userData?.id;
 
+	/**
+	 * Observable, достаточно запушить нового пользователя - не достаточно
+	 */
+	const usersInRoom = data.users;
 
-	const users = (data: RoomData): JSX.Element[] => {
+	useEffect(() => {
+	}, [roomStorage.roomUsersData.length, data.users.length])
 
-		const users = data.users;
-		console.log(users);
-		return users.map((user) => {
+	useEffect(() => {
 
+		const lastJoinedId = roomStorage.lastJoined?.clientId;
+		if (!data.users.some((user) => {
+			return user.id === lastJoinedId;
+		}) && lastJoinedId) {
+			roomStorage.addRoomMember((lastJoinedId));
+		}
+	}, [roomStorage.lastJoined, roomStorage, data.users])
+
+
+	const users = (): JSX.Element[] => {
+
+		return usersInRoom.map((user) => {
 			let isOnline = false;
-			if (roomStorage.checkOnline(user.id)) {
+			if (roomStorage.checkOnline(user.id) && roomStorage.roomUsersData.length) {
 				isOnline = true;
 			}
 
@@ -74,7 +93,7 @@ export const Info = observer(({className, data, ...props}: InfoProps): JSX.Eleme
 			<div className='info__users-container'>
 				<div className='info__members'>{CONST.MEMBERS}</div>
 				<div className='info__users'>
-					{users(data)}
+					{users()}
 				</div>
 			</div>
 		</div>

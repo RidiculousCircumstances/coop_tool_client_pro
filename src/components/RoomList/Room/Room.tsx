@@ -15,8 +15,14 @@ export const Room = observer(({room, activeRoom, setActiveRoom, className, ...pr
 	const [isHoveredRoom, setHoveredRoom] = useState<boolean>(false);
 	const { roomStorage, userStorage } = useContext(Context);
 
+	/**
+	 * Библиотечных хук для получения доступа к буферу обмена
+	 */
 	const clipboard = useClipboard();
 
+	/**
+	 * Прослушка присоединяющихся пользователей
+	 */
 	useEffect(() => {
 		
 		if (activeRoom !== room.id) {
@@ -29,6 +35,9 @@ export const Room = observer(({room, activeRoom, setActiveRoom, className, ...pr
 	
 	}, [roomStorage.lastJoined, roomStorage, activeRoom, room.id]);
 
+	/**
+	 * Прослушка покидающих комнату пользователей
+	 */
 	useEffect(() => {
 		
 		if (activeRoom !== room.id) {
@@ -41,24 +50,45 @@ export const Room = observer(({room, activeRoom, setActiveRoom, className, ...pr
 	}, [roomStorage.lastLeaved, roomStorage, activeRoom, room.id]);
 
 	/**
-	 * Устанавливает прослушку комнаты, обрабатывает: вход / выход.
+	 * Получение пользователей онлайн при входе в комнату
+	 */
+	useEffect(() => {
+		if (activeRoom !== room.id) {
+			return;
+		}
+		const listen =async () => {
+			await roomStorage.setUsersOnline();
+		}
+
+		listen();
+
+	}, [roomStorage.roomUsersData, roomStorage, activeRoom, room.id]);
+
+	/**
+	 * Устанавливает активную комнату
 	 */
 	const handleJoinRoom = () => {
+
 		if (room.id !== activeRoom) {
+
 			const userId = userStorage.userData?.id;
+			console.log(userStorage.userData)
 			if (!userId) {
-				console.log('There is no user id');
 				return;
 			}
+			
 			roomStorage.setActiveRoom(room, userId);
-
 			setActiveRoom(room.id);
-	
 		}
 		
 	}
 
-	const handleShowPopupOn = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+	/**
+	 * 
+	 * @param e 
+	 * Управляет контекстным меню с управлением комнатой
+	 */
+	const handleShowRoomActionsPopupOn = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
 		const coords = e.currentTarget.getBoundingClientRect();
 		setTimeout(() => {
 			setShowRoomActionPopup(true);
@@ -99,10 +129,10 @@ export const Room = observer(({room, activeRoom, setActiveRoom, className, ...pr
 				<span>{room.name}</span>
 				
 				<div key={`${room.id}-span`} className={cn('room__action-dots', {'room__action-dots--active': isHoveredRoom})}
-					onMouseEnter={(e) => handleShowPopupOn(e)} onMouseLeave={ handleShowRoomActionsPopupOff }
+					onMouseEnter={(e) => handleShowRoomActionsPopupOn(e)} onMouseLeave={ handleShowRoomActionsPopupOff }
 					>
 						...
-					<ModalHover onMouseOver={(e) => handleShowPopupOn(e)} onMouseLeave={handleShowRoomActionsPopupOff} active={ShowRoomActionPopup} coord={roomActionPopupPosition} >
+					<ModalHover onMouseOver={(e) => handleShowRoomActionsPopupOn(e)} onMouseLeave={handleShowRoomActionsPopupOff} active={ShowRoomActionPopup} coord={roomActionPopupPosition} >
 						<div className='room__modals'>
 							
 							<div onClick={handleCopyLink} className='room__modals-action'>{CONST.COPY_TEXT}</div>
