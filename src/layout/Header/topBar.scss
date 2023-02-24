@@ -1,0 +1,23 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+.top-bar {
+	display: grid;
+	grid-template-columns: auto 1fr auto 1fr;
+	grid-template-rows: auto;
+
+	grid-template-areas:
+		"chat . room .";
+
+	@include getMainColor();
+
+
+	&__chat {
+		grid-area: chat;
+	
+	}
+
+	&__room-list {
+		grid-area: room;	
+	}
+}

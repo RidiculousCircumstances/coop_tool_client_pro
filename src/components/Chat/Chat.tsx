@@ -11,6 +11,7 @@ import { ReferencedMessage } from './ReferencedMessage/ReferencedMessage';
 import cn from 'classnames';
 import { Info } from './Info/Info';
 import { UsersCount } from './usersCount/UsersCount';
+import { Droptop } from '../Droptop/Droptop';
 
 export enum DisplayTypes {
 	Chat,
@@ -28,9 +29,8 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 	const [files, setFile] = useState<File[] | null>(null);
 	const [text, setText] = useState<string>('');
 	const [showBackTo, setShowBackTo] = useState<boolean>(true);
-
-
 	const [displayType, setDisplayType] = useState<DisplayTypes>(DisplayTypes.Chat);
+	const [isShowChat, setIsShowChat] = useState<boolean>(false);
 
 	const roomName = roomStorage.activeRoom?.name
 	chatStorage.chatContainerRef = chatContainerRef;
@@ -354,8 +354,14 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 
 	const usersCount = roomStorage.activeRoom?.users.length;
 
+	const handleShowChat = () => {
+		isShowChat ? setIsShowChat(false) : setIsShowChat(true);
+	}
+
+
+
 	return (
-		<div className='chat'>
+		<div className={cn(className, 'chat', {'chat--no-border': !isShowChat})}>
 			<div className='chat__top-bar'>
 
 				<div className={cn('chat__back-button-container')}>
@@ -376,64 +382,67 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 					}
 				</div>
 
-				<div className='chat__action-dots-wrapper'>
+				<div className='chat__action-dots-wrapper' onClick={handleShowChat}>
 					<div className='chat__action-dots' hidden={!roomName}>...</div>
 				</div>
 
 			</div>
 		
-			{displayType === DisplayTypes.Chat &&
-			<div ref={chatContainerRef} className='chat__container'>
-				<ul className='chat__list'>
-					<div className='chat_messages'>
-						{(messagesList())}
+
+			<Droptop contentStyleActive='chat__droptop-content' 
+					 containerStyleActive='chat__droptop-container'
+					 active={isShowChat} className='chat__droptop'>
+					{displayType === DisplayTypes.Chat &&
+						<div ref={chatContainerRef} className='chat__container'>
+							<ul className='chat__list'>
+								<div className='chat_messages'>
+									{(messagesList())}
+								</div>
+							</ul>
+						</div>
+					}
+					{displayType === DisplayTypes.RoomInfo && roomStorage.activeRoom &&
+						<Info />
+					}
+
+					<div className={cn('chat__back-to-icon-wrapper')} onClick={handleBackToZero}
+						hidden={showBackTo || displayType === DisplayTypes.RoomInfo}>
+						<div className='icon chat__back-to-icon'></div>
 					</div>
-				</ul>
-			</div>
-			}
-		
-			{displayType === DisplayTypes.RoomInfo && roomStorage.activeRoom &&
-				<Info />
-			}
+					<div className='chat__bottom-bar' hidden={!activeIfChat() || !roomName}>
+						{files &&
+							<div className='chat__preload-container'>
+								{filePreviews()}
+							</div>}
+
+						{taggedOnReplyMsg &&
+							/**
+							 * Тегнутое сообщение при отправке
+							 */
+							<ReferencedMessage type='send' refId={taggedOnReplyMsg.messageId} setActive={setTaggedOnReplyMsg} />
+						}
+
+						<div className='chat__send-bar'>
+							<div onClick={handleFileClick} className='chat__append-file-container'>
+								<span className='chat__file-button'></span>
+								<input ref={fileRef} type={'file'} style={{ display: 'none' }}
+									onChange={(e) => handleFileChange(e)}></input>
+							</div>
+							<div className='chat__input'>
+								<Textarea onKeyDown={handleKeyDownSend} minRows={1}
+									maxRows={5} placeholder='Напишите сообщение...'
+									onChange={handleTextChange}
+									onPaste={handleFilePaste}
+									value={text} />
+							</div>
+							<div className='chat__send-button-container' onClick={handleSendClick}>
+								<span className='chat__send-button'></span>
+							</div>
+						</div>
+				</div>
+
+			</Droptop>
 			
-
-			<div className={cn('chat__back-to-icon-wrapper')} onClick={handleBackToZero} 
-					hidden={showBackTo || displayType === DisplayTypes.RoomInfo}>
-				<div className='icon chat__back-to-icon'></div>
-			</div>
-			<div className='chat__bottom-bar' hidden={!activeIfChat() || !roomName}>
-			{files && 
-			<div className='chat__preload-container'>
-					{filePreviews()}
-			</div>}
-
-			{taggedOnReplyMsg &&
-			/**
-			 * Тегнутое сообщение при отправке
-			 */
-			<ReferencedMessage type='send' refId={taggedOnReplyMsg.messageId} setActive={setTaggedOnReplyMsg}/>
-			}
-
-			<div className='chat__send-bar'>
-				<div onClick={handleFileClick} className='chat__append-file-container'>
-					<span className='chat__file-button'></span>
-					<input ref={fileRef} type={'file'} style={{ display: 'none' }}
-						onChange={(e) => handleFileChange(e)}></input>
-				</div>
-
-				<div className='chat__input'>
-						<Textarea onKeyDown={handleKeyDownSend} minRows={1} 
-						maxRows={5} placeholder='Напишите сообщение...'
-						onChange={handleTextChange} 
-						onPaste={handleFilePaste}
-						value={text} />
-				</div>
-				
-				<div className='chat__send-button-container' onClick={handleSendClick}>
-					<span className='chat__send-button'></span>
-				</div>
-			</div>
 			
-		</div>
 	</div>);
 })

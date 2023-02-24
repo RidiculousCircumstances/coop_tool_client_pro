@@ -1,8 +1,6 @@
 import React, { createContext } from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter } from 'react-router-dom';
-import App from './App';
-import { Gateway } from './services/gateway/Gateway';
+import { App } from './App';
 import { ChatStorage } from './storage/chat/Chat.storage';
 import { RoomStorage } from './storage/room/Room.storage';
 import { UserStorage } from './storage/user/User.storage';

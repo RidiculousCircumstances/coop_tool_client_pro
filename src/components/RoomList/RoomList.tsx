@@ -12,7 +12,7 @@ import { Room } from './Room/Room';
 
 export type ActionRoomMenuType = 'new' | 'join' | null;
 
-export const RoomList = observer(({...props}: RoomListProps): JSX.Element => {
+export const RoomList = observer(({className, ...props}: RoomListProps): JSX.Element => {
 	
 	const [isActiveRoomActions, setActiveRoomActions] = useState<boolean>(false);
 	const [isActiveRoomsMenu, setActiveRoomsMenu] = useState<boolean>(false);
@@ -110,11 +110,13 @@ export const RoomList = observer(({...props}: RoomListProps): JSX.Element => {
 
 
 	return (
-	<div className='roomList'>
+		<div className={cn(className, 'roomList')}>
 			<Button className={cn('roomList__room-button', 
-					{ 'roomList__room-button--active': isActiveRoomsMenu })} 
-					appearence={'long'} onClick={roomsMenuHandler}>Комнаты</Button>
-			<Droptop className='roomList__droptop' active={isActiveRoomsMenu}>
+			{ 'roomList__room-button--active': isActiveRoomsMenu })} 
+			appearence={'long'} onClick={roomsMenuHandler}>
+				Комнаты
+			</Button>
+		<Droptop className='roomList__droptop' active={isActiveRoomsMenu}>
 
 			<div className='roomList__main'>
 				<div className='roomList__header'>

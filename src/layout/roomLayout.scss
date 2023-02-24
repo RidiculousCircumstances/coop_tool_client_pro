@@ -1,0 +1,37 @@
+@import "../styles/variables.scss";
+
+.room-layout {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr;
+	grid-template-rows: 52px 1fr 1fr;
+
+	grid-template-areas: 
+		"head head head head head"
+		"canvas canvas canvas canvas tools"
+		"canvas canvas canvas canvas tools";
+
+	&__header {
+		grid-area: head;
+	}
+
+	&__chat {
+		grid-area: chat;
+	}
+
+	&__rooms {
+		grid-area: rooms;
+		
+	}
+
+	&__members-popup {
+		grid-area: popup;
+	}
+
+	&__canvas {
+		grid-area: canvas;
+	}
+
+	&__tools {
+		grid-area: tools;
+	}
+}
