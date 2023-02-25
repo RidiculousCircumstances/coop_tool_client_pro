@@ -5,11 +5,10 @@
 .roomList {
 	width: 275px;
 	display: block;
-	height: 86vh;
-
 	&__room-button {
 		border-radius: 16px;
 		transition-delay: 0.6s;
+		margin-bottom: -11px;
 		@include getMainColor();
 	
 		&:hover {
@@ -34,7 +33,11 @@
 	&__main {
 		box-sizing: border-box;
 		border-radius: 0 0 16px 16px;
-		
+		display: flex;
+		flex-direction: column;
+		height: inherit;
+		max-height: inherit;
+		// margin-top: -10vh;
 	}
 
 	&__header {
@@ -51,6 +54,8 @@
 		overflow-y: scroll;
 		overflow-x: hidden;
 		height: 75vh;
+		display: flex;
+		flex-direction: column-reverse;
 	}
 
 	&__droptop-chats-input {
@@ -101,7 +106,7 @@
 
 	&__chats-action-menu {
 		display: contents;
-		height: 120px;
+		height: 140px;
 	}
 
 	&__droptop-chats-action-menu {
@@ -111,6 +116,29 @@
 
 	&__droptop-no-border-radius {
 		border-radius: 0 !important;
+		border-top: 1px solid;
+	}
+
+	&__droptop-container {
+		height: 86vh !important;
+		max-height: 86vh;
+		margin-top: 10px;
+	}
+
+	&__droptop-content {
+		display: flex;
+		flex-direction: column;
+		height: inherit;
+		max-height: inherit;
+		position: relative;
+		overflow: hidden;
+	}
+
+	&__chats-action-wrapper {
+		display: flex;
+		flex-direction: column-reverse;
+		height: inherit;
+		margin-top: -1.8vh;
 	}
 
 }

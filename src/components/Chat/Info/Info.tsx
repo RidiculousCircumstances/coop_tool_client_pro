@@ -65,37 +65,40 @@ export const Info = observer(({className, ...props}: InfoProps): JSX.Element => 
 	
 	return (
 		<div className='info'>
-			<div className='info__header'>
-				<div className='info__room-about'>
-					<div className='info__name'>{data.name}</div>
-					<div className='info__flex-row-wrapper underline'>
-						<UsersCount count={usersCount} />
+			<div className='info__reverse-wrapper'>
+				<div className='info__header'>
+					<div className='info__room-about'>
+						<div className='info__name'>{data.name}</div>
+						<div className='info__flex-row-wrapper underline'>
+							<UsersCount count={usersCount} />
+						</div>
+						<div className='info__flex-row-wrapper'>
+							<span>{CONST.CREATED} </span>
+							<span>{created_at}</span>
+						</div>
+
 					</div>
-					<div className='info__flex-row-wrapper'>
-						<span>{CONST.CREATED} </span>
-						<span>{created_at}</span>
+					<hr className='info__line'></hr>
+				</div>
+
+
+				<div className='info__buttons'>
+					<div className='info__row'>
+						<span></span>
+						<span></span>
+						<span></span>
 					</div>
-
 				</div>
-				<hr className='info__line'></hr>
-			</div>
-			
 
-			<div className='info__buttons'>
-				<div className='info__row'>
-					<span></span>
-					<span></span>
-					<span></span>
+
+				<div className='info__users-container'>
+					<div className='info__members'>{CONST.MEMBERS}</div>
+					<div className='info__users'>
+						{users()}
+					</div>
 				</div>
 			</div>
 
-
-			<div className='info__users-container'>
-				<div className='info__members'>{CONST.MEMBERS}</div>
-				<div className='info__users'>
-					{users()}
-				</div>
-			</div>
 		</div>
 		
 	)

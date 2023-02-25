@@ -392,6 +392,8 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 			<Droptop contentStyleActive='chat__droptop-content' 
 					 containerStyleActive='chat__droptop-container'
 					 active={isShowChat} className='chat__droptop'>
+
+
 					{displayType === DisplayTypes.Chat &&
 						<div ref={chatContainerRef} className='chat__container'>
 							<ul className='chat__list'>
@@ -404,6 +406,8 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 					{displayType === DisplayTypes.RoomInfo && roomStorage.activeRoom &&
 						<Info />
 					}
+
+					
 
 					<div className={cn('chat__back-to-icon-wrapper')} onClick={handleBackToZero}
 						hidden={showBackTo || displayType === DisplayTypes.RoomInfo}>
