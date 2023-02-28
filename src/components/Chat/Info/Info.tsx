@@ -70,7 +70,7 @@ export const Info = observer(({className, ...props}: InfoProps): JSX.Element => 
 					<div className='info__room-about'>
 						<div className='info__name'>{data.name}</div>
 						<div className='info__flex-row-wrapper underline'>
-							<UsersCount count={usersCount} />
+							<UsersCount count={usersCount} noun={CONST.USERS} />
 						</div>
 						<div className='info__flex-row-wrapper'>
 							<span>{CONST.CREATED} </span>

@@ -1,12 +1,12 @@
 
 import cn from 'classnames';
 import ReactTextareaAutosize from 'react-textarea-autosize';
-import { TextareaProps } from './textarea.props';
+import { AutoTextareaProps } from './autoTextarea.props';
 import './textarea.scss';
 
-export const Textarea = 
+export const AutoTextarea = 
 	(
-		{ maxRows, minRows, placeholder, onChange, value, onKeyDown, onPaste, ...props }: TextareaProps,
+		{ maxRows, minRows, placeholder, onChange, value, onKeyDown, onPaste, ...props }: AutoTextareaProps,
 	): JSX.Element => {
 
 		

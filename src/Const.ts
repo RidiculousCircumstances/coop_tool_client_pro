@@ -1,4 +1,4 @@
-type ThreeForms = [string, string, string]
+import { ThreeForms } from './components/Chat/usersCount/UsersCount.props';
 
 export const CONST = {
 	SOCKET_URL: 'ws://83.246.208.128:5000',
@@ -10,16 +10,18 @@ export const CONST = {
 	BACK: 'Назад',
 	DROPTOP_NEW: 'Введите название комнаты',
 	DROPTOP_NEW_BUTTON: 'Создать',
-
+	ONLINE: 'онлайн',
 	DROPTOP_JOIN: 'Введите id комнаты',
 	DROPTOP_JOIN_BUTTON: 'Присоединиться',
 	COPY_TEXT: 'Копировать id комнаты',
 	JOIN: 'Войти',
 	USERS: ['участник', 'участника', 'участников'] as ThreeForms,
 	INFO: 'Информация',
+	CHAT: 'Беседа',
 	CHOOSE_ROOM: 'Выберите комнату',
 	CREATED: 'cоздано',
 	MEMBERS: 'Участники',
+	EMPTY_ROOM: 'Здесь пока что ничего нет...',
 
 
 	ALLOWED_FILES: ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'],

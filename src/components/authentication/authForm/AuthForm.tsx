@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { CONST } from '../../../Const';
 import { Button } from '../../Button/Button';
-import { Input } from '../../input/Input'
+import { TextInput } from '../../TextInput/TextInput'
 import { RegistrationFormData } from '../RegistrationFormInterface';
 import { AuthFormProps } from './AuthForm.props'
 
@@ -15,7 +15,7 @@ export const AuthForm = ({ type, handler, error, isSuccess, ...props  }: AuthFor
 	return (
 		<form className='auth__form-module' onSubmit={handleSubmit(handler)}>
 			<div className='auth__input_wrapper'>
-				<Input {...register('email', {
+				<TextInput {...register('email', {
 					required: {
 						value: true,
 						message: 'Поле email не должно быть пустым'
@@ -25,7 +25,7 @@ export const AuthForm = ({ type, handler, error, isSuccess, ...props  }: AuthFor
 					error={errors.email} />
 
 				{type === 'register' && 
-					<Input {...register('nickname', {
+					<TextInput {...register('nickname', {
 						required: {
 							value: true,
 							message: 'Поле nickname не должно быть пустым'
@@ -35,7 +35,7 @@ export const AuthForm = ({ type, handler, error, isSuccess, ...props  }: AuthFor
 						error={errors.nickname} />
 				}
 
-				<Input {...register('password', {
+				<TextInput {...register('password', {
 					required: {
 						value: true,
 						message: 'Поле password не должно быть пустым'
@@ -47,7 +47,7 @@ export const AuthForm = ({ type, handler, error, isSuccess, ...props  }: AuthFor
 					error={errors.password}
 					 />
 
-				{type === 'login' && <Input disabled />}
+				{type === 'login' && <TextInput disabled />}
 				<div>
 					{(errors.email || (type === 'register' && errors.nickname) || errors.password) && <div className='auth__error'>{CONST.EMPTY_FIELD_ERROR}</div>}
 					{(error === 400) && <div className='auth__error'>{CONST.ALREADY_EXISTS_ERROR}</div>}

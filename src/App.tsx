@@ -4,6 +4,8 @@ import { Context } from '.';
 import { Authentication } from './components/authentication/Authentication';
 import './styles/app.scss';
 import { RoomLayout } from './layout/RoomLayout';
+import { RoomList } from './components/RoomList/RoomList';
+import { Chat } from './components/Chat/Chat';
 
 export const App = observer(() => {
   const { userStorage } = useContext(Context);
@@ -12,7 +14,9 @@ export const App = observer(() => {
     <div className="image">
       <div className="app">
         { userStorage.isAuth ?
-          <RoomLayout />
+          <RoomLayout 
+            roomList={<RoomList />} 
+            chat={<Chat />} />
           :
           <Authentication />
         }

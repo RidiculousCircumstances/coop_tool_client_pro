@@ -1,5 +1,5 @@
 import { CONST } from '../../Const';
-import { Input } from '../input/Input';
+import { TextInput } from '../TextInput/TextInput';
 import { Button } from '../Button/Button';
 import { DroptopProps } from './Droptop.props';
 import cn from 'classnames';

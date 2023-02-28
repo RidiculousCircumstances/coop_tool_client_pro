@@ -1,5 +1,5 @@
 import { CONST } from '../../Const';
-import { Input } from '../input/Input';
+import { TextInput } from '../TextInput/TextInput';
 import { Button } from '../Button/Button';
 import { ModalProps } from './Modal.props';
 import cn from 'classnames';

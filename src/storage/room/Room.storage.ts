@@ -1,7 +1,7 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 import { RoomCreateData } from '../../models/Room/RoomCreateData';
 import { RoomData } from '../../models/Room/RoomData';
-import { JoinRoom, LeaveRoom, UsersCirculation } from '../../services/gateway/events';
+import { UsersCirculation } from '../../services/gateway/events';
 import { MemberService } from '../../services/MemberService';
 import { RoomService } from '../../services/RoomService';
 import { Storage } from '../Storage';
@@ -14,14 +14,17 @@ export class RoomStorage extends Storage {
 	@observable
 	activeRoom: RoomData | null = null;
 
-
 	/**
 	 * Массив пользователей онлайн
 	 */
 	@observable
 	private _roomUserData: UsersCirculation[] = [];
 	private set roomJoinData(data: UsersCirculation) {
-		data && this._roomUserData.push(data);
+		data && 
+		!this._roomUserData.some((user) => {
+			return user.clientId === data.clientId;
+		}) &&
+		this._roomUserData.push(data);
 		this.lastJoined = data;
 	}
 	private set roomLeaveData(data: UsersCirculation) {

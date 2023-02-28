@@ -20,7 +20,6 @@
 	&__bottom-bar {
 		display: flex;
 		margin-top: auto;
-		overflow: hidden;
 		flex-direction: column;
 		border-top: 1px solid $border-color;
 	}
@@ -65,7 +64,9 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		border-bottom: 1px solid $border-color;
+		&--border-bottom {
+			border-bottom: 1px solid $border-color;
+		}
 	}
 	
 
@@ -80,7 +81,7 @@
 		position: absolute;
 		top: 50%;
 		left: 25%;
-
+		
 		@media(max-width: 1360px) {
 			top: 50%;
 			left: 14%;
@@ -321,5 +322,19 @@
 
 	&--no-border {
 		border-radius: 0;
+	}
+
+	&--no-border-color {
+		border: none;
+	}
+
+	&__users-count-wrapper {
+		display: flex;
+		gap: 5px;
+		justify-content: center;
+	}
+
+	&__users-online {
+		@include getFont($size: 9px, $weight: 700, $color: $green-color, $height: 24px);
 	}
 }

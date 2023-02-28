@@ -1,6 +1,7 @@
 import { DetailedHTMLProps, HTMLAttributes } from 'react';
-import { RoomData } from '../../../models/Room/RoomData';
 
+export type ThreeForms = [string, string, string];
 export interface UsersCountProps extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
-	count: number
+	count: number,
+	noun: ThreeForms,
 }

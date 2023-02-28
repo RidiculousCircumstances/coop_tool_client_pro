@@ -3,7 +3,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { Context } from '../..';
 import { CONST } from '../../Const';
 import { MessageData } from '../../models/Message/MessageData';
-import { Textarea } from '../textarea/Textarea';
+import { AutoTextarea } from '../AutoTextarea/AutoTextarea';
 import { ChatProps } from './Chat.props';
 import './chat.scss';
 import { Message } from './Message/Message';
@@ -30,7 +30,7 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 	const [text, setText] = useState<string>('');
 	const [showBackTo, setShowBackTo] = useState<boolean>(true);
 	const [displayType, setDisplayType] = useState<DisplayTypes>(DisplayTypes.Chat);
-	const [isShowChat, setIsShowChat] = useState<boolean>(false);
+	const [isOpenedSlider, setIsOpenedSlider] = useState<boolean>(false);
 
 	const roomName = roomStorage.activeRoom?.name
 	chatStorage.chatContainerRef = chatContainerRef;
@@ -299,14 +299,14 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 	}
 
 	const goToRoomInfo = () => {
-		setDisplayType(DisplayTypes.RoomInfo);
+		isOpenedSlider && setDisplayType(DisplayTypes.RoomInfo);
 	}
 
 	const goToRoomChat = () => {
 		setDisplayType(DisplayTypes.Chat);
 	}
 
-	const activeIfChat = () => {
+	const checkDisplayChatType = () => {
 		return displayType === DisplayTypes.Chat;
 	}
 
@@ -319,14 +319,15 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 
 		if (messages && messages.length > 0) {
 			return messages.map((message) => {
-
 				return (<Message key={message.messageId} data={message} replyHandler={handleTaggedOnReplyMsg}
 					 />
 				)
 			});
 		} else {
 			return (
-				<div className='chat__empty'>Здесь пока что ничего нет...</div>
+				<div className='chat__empty'>
+					{isOpenedSlider ? CONST.EMPTY_ROOM : ''}
+				</div>
 			)
 		}
 
@@ -354,29 +355,54 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 
 	const usersCount = roomStorage.activeRoom?.users.length;
 
+	const usersOnlineCount = roomStorage.roomUsersData.length > 0 ? roomStorage.roomUsersData.length : null;
+
 	const handleShowChat = () => {
-		isShowChat ? setIsShowChat(false) : setIsShowChat(true);
+		isOpenedSlider ? setIsOpenedSlider(false) : setIsOpenedSlider(true);
+		if (isOpenedSlider) {
+			goToRoomChat();
+		}
+	}
+
+	const openSlider = () => {
+		setIsOpenedSlider(true);
+	}
+
+	const handleOnSliderTitleClick = () => {
+
+		if (!isOpenedSlider && roomStorage.activeRoom) {
+			openSlider()
+		} else {
+			if (checkDisplayChatType()) {
+				goToRoomInfo();
+			} else {
+				goToRoomChat();
+			}
+		}
 	}
 
 
-
 	return (
-		<div className={cn(className, 'chat', {'chat--no-border': !isShowChat})}>
-			<div className='chat__top-bar'>
+		<div className={cn(className, 'chat', {'chat--no-border': !isOpenedSlider},
+			 { 'chat--no-border-color': !isOpenedSlider })}>
+			<div className={cn('chat__top-bar', { 'chat__top-bar--border-bottom': isOpenedSlider })} >
 
 				<div className={cn('chat__back-button-container')}>
-						<div hidden={activeIfChat()} className='chat__back-row' onClick={goToRoomChat}>
+					<div hidden={checkDisplayChatType()} className='chat__back-row' onClick={goToRoomChat}>
 						<span className='icon chat__back-button'></span>
 						<span className='chat__back-title'>{CONST.BACK}</span>
 					</div>
 				</div>
 
-					<div className='chat__name' onClick={goToRoomInfo} title={activeIfChat() ? CONST.INFO : ''}>
+				<div className='chat__name' onClick={handleOnSliderTitleClick} title={checkDisplayChatType() && isOpenedSlider ? CONST.INFO : CONST.CHAT}>
 					{	
-						roomName ? (activeIfChat() ? (
+						roomName ? (checkDisplayChatType() ? (
 							<div>
 								{roomName}
-								{usersCount  && <UsersCount className='chat__users-count underline' count={usersCount} />}
+								<div className='chat__users-count-wrapper'>
+									{usersCount && <UsersCount className='chat__users-count underline' count={usersCount} noun={CONST.USERS} />}
+									{usersOnlineCount && <div className='chat__users-online'>{usersOnlineCount} {CONST.ONLINE} </div>}
+								</div>
 							</div>
 							) : CONST.INFO) : CONST.CHOOSE_ROOM
 					}
@@ -388,10 +414,9 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 
 			</div>
 		
-
 			<Droptop contentStyleActive='chat__droptop-content' 
 					 containerStyleActive='chat__droptop-container'
-					 active={isShowChat} className='chat__droptop'>
+					 active={isOpenedSlider} className='chat__droptop'>
 
 
 					{displayType === DisplayTypes.Chat &&
@@ -413,7 +438,7 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 						hidden={showBackTo || displayType === DisplayTypes.RoomInfo}>
 						<div className='icon chat__back-to-icon'></div>
 					</div>
-					<div className='chat__bottom-bar' hidden={!activeIfChat() || !roomName}>
+					<div className='chat__bottom-bar' hidden={!checkDisplayChatType() || !roomName}>
 						{files &&
 							<div className='chat__preload-container'>
 								{filePreviews()}
@@ -433,7 +458,7 @@ export const Chat = observer(({className, ...props}: ChatProps): JSX.Element => 
 									onChange={(e) => handleFileChange(e)}></input>
 							</div>
 							<div className='chat__input'>
-								<Textarea onKeyDown={handleKeyDownSend} minRows={1}
+							<AutoTextarea onKeyDown={handleKeyDownSend} minRows={1}
 									maxRows={5} placeholder='Напишите сообщение...'
 									onChange={handleTextChange}
 									onPaste={handleFilePaste}

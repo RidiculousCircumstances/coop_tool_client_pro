@@ -72,7 +72,6 @@ export const Room = observer(({room, activeRoom, setActiveRoom, className, ...pr
 		if (room.id !== activeRoom) {
 
 			const userId = userStorage.userData?.id;
-			console.log(userStorage.userData)
 			if (!userId) {
 				return;
 			}

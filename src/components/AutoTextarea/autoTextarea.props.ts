@@ -4,7 +4,7 @@ import {
 } from 'react';
 
 
-export interface TextareaProps extends DetailedHTMLProps<InputHTMLAttributes<HTMLTextAreaElement>,
+export interface AutoTextareaProps extends DetailedHTMLProps<InputHTMLAttributes<HTMLTextAreaElement>,
 	HTMLTextAreaElement> {
 	maxRows: number;
 	minRows: number;
